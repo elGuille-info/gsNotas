@@ -47,6 +47,7 @@
     <PackageReference Include="Google.Apis.Core" Version="1.57.0" />
     <PackageReference Include="Google.Apis.Docs.v1" Version="1.57.0.2833" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.57.0.2831" />
+    <PackageReference Include="Google.Apis.Keep.v1" Version="1.57.0.2637" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.14" />
   </ItemGroup>
 

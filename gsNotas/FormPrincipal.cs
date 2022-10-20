@@ -16,6 +16,7 @@ v2.0.0.0    19-oct-22   Primera versión para .NET 6.
                         A ver si logro que encaje el diseño (y que el diseñador funcione)
             20-oct-22   Todo el diseño finalizado.
                         Creo el repositorio en GitHub (19.30)
+                        Añado el paquete Google.Apis.Keep.v1 v1.57.0.2637
 */
 
 using System;

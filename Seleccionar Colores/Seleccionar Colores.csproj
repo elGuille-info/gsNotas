@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>Seleccionar_Colores</RootNamespace>
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Authors>elGuille</Authors>
+    <Company>elGuille</Company>
+    <Title>Seleccionar Colores</Title>
+    <Description>Utilidad para elegir los colores según el orden indicado: Nombre, Matiz, Saturación, Brillo, Distancia, Sin clasificar.
+    Usando el control WellPanel de Hannes DuPreez. Compilado con .NET 6. Revisión del 20-oct-2022.
+ </Description>
+    <Copyright>(c) Guillermo (elGuille) Som, 2020, 2022</Copyright>
+    <RepositoryUrl>https://github.com/elGuille-info/gsNotas</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+</Project>
