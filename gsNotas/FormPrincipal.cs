@@ -17,6 +17,7 @@ v2.0.0.0    19-oct-22   Primera versión para .NET 6.
             20-oct-22   Todo el diseño finalizado.
                         Creo el repositorio en GitHub (19.30)
                         Añado el paquete Google.Apis.Keep.v1 v1.57.0.2637
+                        Añado referencia al proyecto Seleccionar Colores. (23.24)
 */
 
 using System;
