@@ -1,0 +1,80 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <!--<Nullable>disable</Nullable>-->
+    <UseWindowsForms>true</UseWindowsForms>
+    <!--<ImplicitUsings>enable</ImplicitUsings>-->
+      <LangVersion>latest</LangVersion>
+      <GenerateDocumentationFile>False</GenerateDocumentationFile>
+      <SignAssembly>True</SignAssembly>
+      <AssemblyOriginatorKeyFile>elGuille_compartido.snk</AssemblyOriginatorKeyFile>
+      <AssemblyName>gsNotas</AssemblyName>
+      <ApplicationTitle>gsNotas</ApplicationTitle>
+      <Title>gsNotas</Title>
+      <Authors>elGuille</Authors>
+      <Company>elGuille</Company>
+      <Description>Gestionar notas y grupos de notas con editor integrado.  Para .NET 6 (revisión del 20-oct-2022)</Description>
+      <Copyright>© Guillermo Som (elGuille), 2020-2022</Copyright>
+      <RepositoryType>git</RepositoryType>
+      <NeutralLanguage>es</NeutralLanguage>
+      <Version>2.0</Version>
+      <AssemblyVersion>2.0.0.0</AssemblyVersion>
+      <FileVersion>2.0.0.0</FileVersion>
+      <ApplicationIcon>gsNotasNET.Android.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Form1.cs" />
+    <Compile Remove="Form1.Designer.cs" />
+    <Compile Remove="FormNotasUC.cs" />
+    <Compile Remove="FormNotasUC.Designer.cs" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Form1.resx" />
+    <EmbeddedResource Remove="FormNotasUC.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="gsNotasNET.Android.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth" Version="1.57.0" />
+    <PackageReference Include="Google.Apis.Core" Version="1.57.0" />
+    <PackageReference Include="Google.Apis.Docs.v1" Version="1.57.0.2833" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.57.0.2831" />
+    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>
