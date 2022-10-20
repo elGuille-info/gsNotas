@@ -15,6 +15,7 @@ Las revisiones anteriores al 19/oct/22 17.38 verlas en el proyecto gsNotasNETF.
 v2.0.0.0    19-oct-22   Primera versión para .NET 6.
                         A ver si logro que encaje el diseño (y que el diseñador funcione)
             20-oct-22   Todo el diseño finalizado.
+                        Creo el repositorio en GitHub (19.30)
 */
 
 using System;
