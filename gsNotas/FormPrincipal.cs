@@ -18,6 +18,7 @@ v2.0.0.0    19-oct-22   Primera versión para .NET 6.
                         Creo el repositorio en GitHub (19.30)
                         Añado el paquete Google.Apis.Keep.v1 v1.57.0.2637
                         Añado referencia al proyecto Seleccionar Colores. (23.24)
+v2.0.0.1    21-oct-22   Empezar a usar los colores (serializados).
 */
 
 using System;
@@ -101,6 +102,11 @@ namespace gsNotas
         {
             InitializeComponent();
 
+            // Asignar el directorio donde se guardarán los colores. (21/oct/22 08.31)
+            Colores.DirectorioConfiguracion = notaUC1.DirNotas;
+            // Leer el contenido del fichero.
+            Colores.Leer();
+
             // Poder indicar en configuración que se use aleatorio o el indicado.
             ColorGrupo = MySetting.ColorGrupo;
             AsignarColoresGrupo();
@@ -119,20 +125,6 @@ namespace gsNotas
                 // Un valor aleatorio entre 1 y 4 (inclusive)
                 elColorGrupo = rnd.Next(1, 5);
             }
-            //var n = elColorGrupo;
-            //if (n == 2)
-            //    ColoresGrupo = new List<Color>() {Color.LightSkyBlue, Color.Gold, Color.PaleGreen, Color.LightPink, Color.Yellow,
-            //                                      Color.FromArgb(0,99,177), Color.LightGoldenrodYellow, Color.AliceBlue, Color.LightGray, Color.Pink };
-            //else if (n == 3)
-            //    ColoresGrupo = new List<Color>() {Color.AliceBlue, Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow,
-            //                                      Color.LightGray, Color.Gold, Color.FromArgb(0,99,177), Color.PaleGreen, Color.Pink, Color.Yellow };
-            //else if (n == 4)
-            //    ColoresGrupo = new List<Color>() {Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow, Color.Gold, Color.DeepPink,
-            //                                      Color.PaleGreen, Color.Yellow, Color.LightGray,Color.AliceBlue,Color.FromArgb(0,99,177) };
-            //else
-            //    // Predeterminado (el que estaba asignado al definir ColoresGrupo.
-            //    ColoresGrupo = new List<Color>() {Color.FromArgb(0,99,177), Color.Gold, Color.PaleGreen, Color.Pink, Color.Yellow,
-            //                                      Color.LightGray, Color.AliceBlue, Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow };
             ColoresGrupo = ElColorGrupo(elColorGrupo);
         }
 
@@ -143,26 +135,63 @@ namespace gsNotas
         /// <param name="cuantosColores"></param>
         private List<Color> ElColorGrupo(int elColorGrupo, int cuantosColores = 15)
         {
-            List<Color> colores;
+            List<Color> colores = null;
+            bool asignar = false;
 
-            if (elColorGrupo == 2)
-                colores = new List<Color>() {Color.LightSkyBlue, Color.Gold, Color.PaleGreen, Color.MistyRose, Color.LemonChiffon,
-                                             Color.FromArgb(0,99,177), Color.LightGoldenrodYellow, Color.AliceBlue, Color.LightGray, Color.LightPink };
-            else if (elColorGrupo == 3)
-                // Colores pálidos
-                colores = new List<Color>() {Color.AliceBlue, Color.LightGoldenrodYellow, Color.PaleGreen, Color.PaleTurquoise, Color.Moccasin,
-                                             Color.SeaShell, Color.Beige, Color.LightCyan, Color.LemonChiffon, Color.MistyRose };
-            else if (elColorGrupo == 4)
-                colores = new List<Color>() {Color.MistyRose, Color.LightSkyBlue, Color.LightGoldenrodYellow, Color.Gold, Color.Pink,
-                                             Color.PaleGreen, Color.LemonChiffon, Color.LightGray, Color.AliceBlue, Color.FromArgb(0,99,177) };
+            // Si existe ese grupo de colores, asignarlo. (21/oct/22 08.25)
+            if (Colores.ColoresGrupos.LosColores.ContainsKey(elColorGrupo))
+            {
+                colores = Colores.ColoresGrupos.LosColores[elColorGrupo];
+                
+                // Comprobar si todos los colores están asignados. (21/oct/22 08.51)
+                var todosSinColor = colores.Where((c) => c.IsEmpty).Count();
+                if (todosSinColor == colores.Count)
+                {
+                    asignar = true;
+                    Colores.ColoresGrupos.LosColores.Remove(elColorGrupo);
+                }
+            }
             else
-                // Predeterminado (el que estaba asignado al definir ColoresGrupo.
-                colores = new List<Color>() {Color.FromArgb(0,99,177), Color.Gold, Color.PaleGreen, Color.Pink, Color.LemonChiffon,
-                                             Color.LightGray, Color.AliceBlue, Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow };
+            {
+                asignar = true;
+            }
+            // Si no están los colores asignados o estaban todos vacíos.
+            if (asignar)
+            {
+                if (elColorGrupo == 2)
+                    colores = new List<Color>() {Color.LightSkyBlue, Color.Gold, Color.PaleGreen, Color.MistyRose, Color.LemonChiffon,
+                                                 Color.FromArgb(0,99,177), Color.LightGoldenrodYellow, Color.AliceBlue, Color.LightGray, Color.LightPink };
+                else if (elColorGrupo == 3)
+                    // Colores pálidos
+                    colores = new List<Color>() {Color.AliceBlue, Color.LightGoldenrodYellow, Color.PaleGreen, Color.PaleTurquoise, Color.Moccasin,
+                                                 Color.SeaShell, Color.Beige, Color.LightCyan, Color.LemonChiffon, Color.MistyRose };
+                else if (elColorGrupo == 4)
+                    colores = new List<Color>() {Color.MistyRose, Color.LightSkyBlue, Color.LightGoldenrodYellow, Color.Gold, Color.Pink,
+                                                 Color.PaleGreen, Color.LemonChiffon, Color.LightGray, Color.AliceBlue, Color.FromArgb(0,99,177) };
+                else
+                    // Predeterminado (el que estaba asignado al definir ColoresGrupo.
+                    colores = new List<Color>() {Color.FromArgb(0,99,177), Color.Gold, Color.PaleGreen, Color.Pink, Color.LemonChiffon,
+                                                 Color.LightGray, Color.AliceBlue, Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow };
+
+                // Si no existe, asignarlos a la colección LosColores.
+                Colores.ColoresGrupos.LosColores.Add(elColorGrupo, colores);
+            }
+            // Comprobación por si no hay colores asignados.
+            if (colores == null)
+            {
+                colores = new();
+            }
+            // Añadir el resto de colores según se indica en cuantosColores.
             for (int i = colores.Count; i < cuantosColores; i++)
             {
                 AñadirNuevoColor(colores);
             }
+            // Asignar los nuevos colores (o puede que los mismos que había).
+            // Primero quitar la clave y después asignarla con los colores.
+            Colores.ColoresGrupos.LosColores.Remove(elColorGrupo);
+            Colores.ColoresGrupos.LosColores[elColorGrupo] = colores;
+            Colores.Guardar(Colores.ColoresGrupos);
+
             return colores;
         }
 
@@ -276,6 +305,9 @@ namespace gsNotas
                 MySetting.Width = this.Width;
             }
             MySetting.SiempreEncima = notaUC1.SiempreEncima;
+
+            // Guardar los colores. (21/oct/22 08.37)
+            Colores.Guardar(Colores.ColoresGrupos);
             MySetting.Save();
 
             if (e.CloseReason == CloseReason.UserClosing)
@@ -1271,6 +1303,9 @@ No se guardan los grupos y notas en blanco.
 
             OpcBtnDeshacer.Enabled = false;
 
+            // Guardar los colores. (21/oct/22 08.37)
+            //Colores.Guardar();
+            Colores.Guardar(Colores.ColoresGrupos);
             MySetting.Save();
             OpcConfigurando = false;
 
@@ -1498,8 +1533,6 @@ No se guardan los grupos y notas en blanco.
 
             // Por si hay más grupos que los colores predeterminados.
             var colores = ElColorGrupo(OpcCboColorGrupo.SelectedIndex, notaUC1.Notas.Keys.Count);
-
-            var elGrupoIndex = notaUC1.GrupoIndex;
 
             // Solo mostrar los colores con los grupos que hay actualmente
             //for (int i = 0; i < notaUC1.Notas.Keys.Count; i++)
