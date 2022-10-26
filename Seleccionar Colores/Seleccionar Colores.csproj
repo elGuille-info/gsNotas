@@ -7,11 +7,14 @@
     <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Authors>elGuille</Authors>
+      <Version>1.0</Version>
+      <AssemblyVersion>1.0.0.0</AssemblyVersion>
+      <FileVersion>1.0.0.1</FileVersion>
+      <Authors>elGuille</Authors>
     <Company>elGuille</Company>
     <Title>Seleccionar Colores</Title>
     <Description>Utilidad para elegir los colores según el orden indicado: Nombre, Matiz, Saturación, Brillo, Distancia, Sin clasificar.
-    Usando el control WellPanel de Hannes DuPreez. Compilado con .NET 6. Revisión del 20-oct-2022.
+    Usando el control WellPanel de Hannes DuPreez. Compilado con .NET 6. Revisión del 25-oct-2022.
  </Description>
     <Copyright>(c) Guillermo (elGuille) Som, 2020, 2022</Copyright>
     <RepositoryUrl>https://github.com/elGuille-info/gsNotas</RepositoryUrl>

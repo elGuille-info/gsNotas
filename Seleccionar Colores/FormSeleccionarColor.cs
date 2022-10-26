@@ -29,22 +29,30 @@ namespace Seleccionar_Colores
         public Color ElColor
         {
             get { return wellPanel1.Color; }
-            set { wellPanel1.Color = value; }
+            set
+            { 
+                wellPanel1.Color = value;
+                Utilities.SetBackColor(lblBackColor, value, true);
+                Utilities.SetForeColor(lblForeColor, value, true);
+            }
         }
 
         public FormSeleccionarColor()
         {
             InitializeComponent();
+
+            duSort.Items.AddRange(Enum.GetValues(typeof(OrderES)));
+            duSort.SelectedIndex = (int)Order.Brightness;
         }
 
         private void FormSeleccionarColor_Load(object sender, EventArgs e)
         {
-            duSort.Items.AddRange(Enum.GetValues(typeof(OrderES)));
-            //duSort.SelectedIndex = 0;
-            duSort.SelectedIndex = (int)Order.Brightness;
+            //duSort.Items.AddRange(Enum.GetValues(typeof(OrderES)));
+            ////duSort.SelectedIndex = 0;
+            //duSort.SelectedIndex = (int)Order.Brightness;
 
-            Utilities.SetBackColor(lblBackColor, wellPanel1.Color, true);
-            Utilities.SetForeColor(lblForeColor, wellPanel1.Color, true);
+            //Utilities.SetBackColor(lblBackColor, wellPanel1.Color, true);
+            //Utilities.SetForeColor(lblForeColor, wellPanel1.Color, true);
         }
 
         private void duSort_SelectedItemChanged(object sender, EventArgs e)

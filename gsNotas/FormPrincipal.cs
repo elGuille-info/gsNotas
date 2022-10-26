@@ -31,6 +31,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Seleccionar_Colores;
+
 namespace gsNotas
 {
     public partial class FormPrincipal : Form
@@ -136,19 +138,24 @@ namespace gsNotas
         private List<Color> ElColorGrupo(int elColorGrupo, int cuantosColores = 15)
         {
             List<Color> colores = null;
+            List<string> colorsHex = null;
             bool asignar = false;
+            string grupoColor = $"Grupo-{elColorGrupo:00}";
 
             // Si existe ese grupo de colores, asignarlo. (21/oct/22 08.25)
-            if (Colores.ColoresGrupos.LosColores.ContainsKey(elColorGrupo))
+            if (Colores.ColoresGrupos.LosColores.ContainsKey(grupoColor))
             {
-                colores = Colores.ColoresGrupos.LosColores[elColorGrupo];
-                
+                // Guardar los colores en formato hexadecimal. (25/oct/22)
+                //colores = Colores.ColoresGrupos.LosColores[grupoColor];
+                colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
+                colores = Colores.ColoresFromHex(colorsHex);
+
                 // Comprobar si todos los colores están asignados. (21/oct/22 08.51)
                 var todosSinColor = colores.Where((c) => c.IsEmpty).Count();
                 if (todosSinColor == colores.Count)
                 {
                     asignar = true;
-                    Colores.ColoresGrupos.LosColores.Remove(elColorGrupo);
+                    Colores.ColoresGrupos.LosColores.Remove(grupoColor);
                 }
             }
             else
@@ -174,7 +181,10 @@ namespace gsNotas
                                                  Color.LightGray, Color.AliceBlue, Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow };
 
                 // Si no existe, asignarlos a la colección LosColores.
-                Colores.ColoresGrupos.LosColores.Add(elColorGrupo, colores);
+                //Colores.ColoresGrupos.LosColores.Add(grupoColor, colores);
+                // Guardar los colores en formato hexadecimal. (25/oct/22)
+                colorsHex = Colores.ColoresToHex(colores);
+                Colores.ColoresGrupos.LosColores.Add(grupoColor, colorsHex);
             }
             // Comprobación por si no hay colores asignados.
             if (colores == null)
@@ -188,8 +198,11 @@ namespace gsNotas
             }
             // Asignar los nuevos colores (o puede que los mismos que había).
             // Primero quitar la clave y después asignarla con los colores.
-            Colores.ColoresGrupos.LosColores.Remove(elColorGrupo);
-            Colores.ColoresGrupos.LosColores[elColorGrupo] = colores;
+            Colores.ColoresGrupos.LosColores.Remove(grupoColor);
+            //Colores.ColoresGrupos.LosColores[grupoColor] = colores;
+            // Guardar los colores en formato hexadecimal. (25/oct/22)
+            colorsHex = Colores.ColoresToHex(colores);
+            Colores.ColoresGrupos.LosColores[grupoColor] = colorsHex;
             Colores.Guardar(Colores.ColoresGrupos);
 
             return colores;
@@ -1541,7 +1554,6 @@ No se guardan los grupos y notas en blanco.
                 var col = colores[i];
                 var lbl = new Label();
                 lbl.Margin = new Padding(0, 0, 3, 3);
-                //lbl.Width = 30;
                 // El valor predeterminado de Width es 100.
                 lbl.Width = 40;
                 // El valor predeterminado de Height es 23.
@@ -1549,17 +1561,35 @@ No se guardan los grupos y notas en blanco.
                 // Resaltar el grupo actual.
                 if (i == ElGrupoIndex)
                 {
-                    //lbl.Margin = new Padding(0, 0, 0, 3);
-                    //lbl.Width = 50;
                     lbl.Height = 36;
                     lbl.BorderStyle = BorderStyle.FixedSingle;
-                    //lbl.FlatStyle = FlatStyle.Flat;
                     lbl.Font = new Font(lbl.Font, FontStyle.Bold);
                 }
                 lbl.Text = i.ToString();
                 lbl.BackColor = col;
                 SetBackColor(lbl, col);
+                // Poder cambiar el color. (25/oct/22 16.54)
+                lbl.Click += Lbl_Click;
+                lbl.Tag = OpcCboColorGrupo.SelectedIndex;
                 flowLayoutPanel1.Controls.Add(lbl);
+            }
+        }
+
+        private void Lbl_Click(object sender, EventArgs e)
+        {
+            Label lbl = sender as Label;
+            if (lbl == null) return;
+            var frmColor = new FormSeleccionarColor();
+            frmColor.ElColor = lbl.BackColor;
+            if (frmColor.ShowDialog() == DialogResult.OK)
+            {
+                lbl.BackColor = frmColor.ElColor;
+                int grupo = (int)lbl.Tag;
+                string grupoColor = $"Grupo-{grupo:00}";
+                var colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
+                int index = Convert.ToInt32(lbl.Text);
+                string s = lbl.BackColor.ToArgb().ToString("x");
+                colorsHex[index] = s;
             }
         }
 

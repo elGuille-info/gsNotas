@@ -31,12 +31,53 @@ namespace gsNotas
         // Las propiedades a serializar deben tener el atributo JsonPropertyName con el nombre a usar en el fichero .json
         // Si alguna propiedad no se quiere serizalizar, usar el atributo JsonIgnore.
 
+        // Guardar los colores en formato hexadecimal, (25/oct/22)
+        // ya que la serialiación parece que no funciona con los colores directamente.
+
         /// <summary>
-        /// Diccionario para los colores. 
+        /// Diccionario para los colores almacenados en formato hexadecimal: AARRGGBB. 
         /// </summary>
         /// <remarks>La clave será el número del grupo de colores y el valor los colores asignados a ese grupo.</remarks>
         [JsonPropertyName("colores")]
-        public Dictionary<int, List<Color>> LosColores { get; set; } = new();
+        public Dictionary<string, List<string>> LosColores { get; set; } = new();
+        //public Dictionary<string, List<Color>> LosColores { get; set; } = new();
+
+        /// <summary>
+        /// Convierte una colección de colores en formato hexadecimal en el equivalente del color.
+        /// </summary>
+        /// <param name="losColores">Colección de los colores en formato hexadecimal.</param>
+        /// <remarks>Cada color debe estar en formato AARRGGBB con varlores hexadecimales.</remarks>
+        public static List<Color> ColoresFromHex(List<string> losColores)
+        {
+            List<Color> list = new List<Color>();
+            for (int i=0; i < losColores.Count; i++)
+            {
+                int alpha = Convert.ToInt32(losColores[i].Substring(0, 2), 16);
+                int r = Convert.ToInt32(losColores[i].Substring(2, 2), 16);
+                int g = Convert.ToInt32(losColores[i].Substring(4, 2), 16);
+                int b = Convert.ToInt32(losColores[i].Substring(6, 2), 16);
+                Color col = Color.FromArgb(alpha, r, g, b);
+                list.Add(col);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Convierte una colección de colores en otra en formato hexadecimnal.
+        /// </summary>
+        /// <param name="losColores">Colección de colores.</param>
+        /// <returns></returns>
+        public static List<string> ColoresToHex(List<Color> losColores)
+        {
+            List<string> list = new List<string>();
+            for (int i = 0; i < losColores.Count; i++)
+            {
+                string s = losColores[i].ToArgb().ToString("x");
+                list.Add(s);
+            }
+            return list;
+        }
 
         // El directorio de configuración en documentos.
         // Si no se indica, usar el de inicio de la aplicación.
@@ -81,10 +122,7 @@ namespace gsNotas
                 if (_ColoresGrupos == null)
                 {
                     _ColoresGrupos = Leer();
-                    if (_ColoresGrupos == null)
-                    {
-                        _ColoresGrupos = new();
-                    }
+                    _ColoresGrupos ??= new();
                 }
                 return _ColoresGrupos;
             }
