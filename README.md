@@ -25,6 +25,8 @@ Gestionar notas y grupos de notas con editor integrado.
   - Aunque el panel superior esté oculto, al pulsar en una de las fichas (que siempre estarán visibles) se muestra el panel.
 
 - Se puede pegar texto con el formato usado al guardar las notas y sustituirlo por los caracteres correspondientes.
+  - Tecla rápida (Ctrl+Alt+V).
 
 - Al modificar una nota y cambiar de nota o de grupo se sustituye el texto de esa nota (antes se agregaba una nueva nota).
-  - Al pulsar F8 no se sustituye la nota actual con el nuevo texto.
+  - Al pulsar F8 no se sustituye la nota actual con el nuevo texto (se añade una nota nueva, pero sin sustituir el texto anterior).
+  - Para sustituir el texto de una nota, pulsa Shift+F8 (mayúsculas + F8).
