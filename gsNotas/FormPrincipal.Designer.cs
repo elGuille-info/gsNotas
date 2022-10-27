@@ -796,11 +796,10 @@
             this.OpcChkAutoGuardar.AutoSize = true;
             this.OpcChkAutoGuardar.Location = new System.Drawing.Point(9, 9);
             this.OpcChkAutoGuardar.Name = "OpcChkAutoGuardar";
-            this.OpcChkAutoGuardar.Size = new System.Drawing.Size(545, 29);
+            this.OpcChkAutoGuardar.Size = new System.Drawing.Size(297, 29);
             this.OpcChkAutoGuardar.TabIndex = 0;
-            this.OpcChkAutoGuardar.Text = "Auto guardar las notas (se actualiza al cambiar de nota o grupo)";
-            this.toolTip1.SetToolTip(this.OpcChkAutoGuardar, "Si está seleccionada y se modifica una nota, se añadirá una nueva nota con el tex" +
-        "to modificado (no se reemplaza la nota modificada)");
+            this.OpcChkAutoGuardar.Text = "Auto guardar la nota modificada";
+            this.toolTip1.SetToolTip(this.OpcChkAutoGuardar, "Se reemplaza el texto de la nota actual al cambiar de nota o grupo.");
             this.OpcChkAutoGuardar.UseVisualStyleBackColor = true;
             this.OpcChkAutoGuardar.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
