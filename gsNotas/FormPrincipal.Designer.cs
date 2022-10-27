@@ -609,6 +609,7 @@
             this.label4.Size = new System.Drawing.Size(191, 29);
             this.label4.TabIndex = 13;
             this.label4.Text = "Colores grupo:";
+            this.toolTip1.SetToolTip(this.label4, "Pulsa en un color para cambiarlo");
             // 
             // OpcChkIniciarConWindows
             // 
@@ -818,6 +819,7 @@
             this.notaUC1.ColoresOscuro = new System.Drawing.Color[] {
         System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30))))),
         System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(166)))), ((int)(((byte)(58)))))};
+            this.notaUC1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.notaUC1.EditorRtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Consolas;}" +
     "}\r\n{\\colortbl ;\\red0\\green99\\blue177;}\r\n{\\*\\generator Riched20 10.0.22000}\\viewk" +
     "ind4\\uc1 \r\n\\pard\\cf1\\f0\\fs20\\par\r\n}\r\n";

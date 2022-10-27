@@ -274,5 +274,17 @@ namespace gsNotas.Properties {
                 this["SiempreEncima"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int OrdenColores {
+            get {
+                return ((int)(this["OrdenColores"]));
+            }
+            set {
+                this["OrdenColores"] = value;
+            }
+        }
     }
 }

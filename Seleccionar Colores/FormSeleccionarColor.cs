@@ -26,6 +26,23 @@ namespace Seleccionar_Colores
 {
     public partial class FormSeleccionarColor : Form
     {
+        // Usar el último valor del orden de los colores. (27/oct/22 14.38)
+
+        /// <summary>
+        /// El orden de los colores a mostrar.
+        /// </summary>
+        public OrderES OrdenColores
+        {
+            get { return (OrderES)duSort.SelectedIndex; }
+            set
+            {
+                duSort.SelectedIndex = (int)value;
+            }
+        }
+
+        /// <summary>
+        /// El color seleccionado.
+        /// </summary>
         public Color ElColor
         {
             get { return wellPanel1.Color; }

@@ -111,6 +111,7 @@ namespace gsNotas
 
             // Poder indicar en configuración que se use aleatorio o el indicado.
             ColorGrupo = MySetting.ColorGrupo;
+            OrdenColores = (WellPanel.OrderES)MySetting.OrdenColores;
             AsignarColoresGrupo();
         }
 
@@ -1314,6 +1315,9 @@ No se guardan los grupos y notas en blanco.
             //MySetting.GuardarEnDrive = OpcChkGuardarEnDrive.Checked;
             //MySetting.BorrarNotasAnterioresDeDrive = OpcChkBorrarNotasAnterioresDrive.Checked;
 
+            // Guardar el último valor usado en el orden de los colores. (27/oct/22 14.53)
+            MySetting.OrdenColores = (int)OrdenColores;
+
             OpcBtnDeshacer.Enabled = false;
 
             // Guardar los colores. (21/oct/22 08.37)
@@ -1402,18 +1406,21 @@ No se guardan los grupos y notas en blanco.
             {
                 picOcultarPanel1.Image = Properties.Resources.ExpanderDown;
                 // Es en porcentaje.
-                this.tableLayoutPanel1.RowStyles[0].Height = 2.6F;
-
+                this.tableLayoutPanel1.RowStyles[0].Height = 3.2F;
+                //this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+                //this.tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
             }
             else
             {
                 picOcultarPanel1.Image = Properties.Resources.ExpanderUp;
                 this.tableLayoutPanel1.RowStyles[0].Height = 40;
+                //this.tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
             }
+            //this.tableLayoutPanel1.RowStyles[1].Height = 100 - this.tableLayoutPanel1.RowStyles[0].Height;
+            //this.tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Percent;
         }
 
         private bool OcultarPanelExpanded = false;
-        //private int TabsConfigHeightNormal;
 
         private void picOcultarPanel1_Click(object sender, EventArgs e)
         {
@@ -1562,7 +1569,8 @@ No se guardan los grupos y notas en blanco.
                 if (i == ElGrupoIndex)
                 {
                     lbl.Height = 36;
-                    lbl.BorderStyle = BorderStyle.FixedSingle;
+                    //lbl.BorderStyle = BorderStyle.FixedSingle;
+                    lbl.BorderStyle = BorderStyle.Fixed3D;
                     lbl.Font = new Font(lbl.Font, FontStyle.Bold);
                 }
                 lbl.Text = i.ToString();
@@ -1575,14 +1583,28 @@ No se guardan los grupos y notas en blanco.
             }
         }
 
+        // Para el orden de colores a mostrar. (27/oct/22 14.43)
+        private WellPanel.OrderES OrdenColores = WellPanel.OrderES.Brillo;
+
         private void Lbl_Click(object sender, EventArgs e)
         {
             Label lbl = sender as Label;
             if (lbl == null) return;
+            // Resaltar la etiqueta a la que se le cambia el color. (27/oct/22 14.56)
+            var bordeAnt = lbl.BorderStyle;
+            //lbl.BorderStyle= BorderStyle.Fixed3D;
+            lbl.BorderStyle = BorderStyle.FixedSingle;
+            var heightAnt = lbl.Height;
+            lbl.Height = 36;
+
             var frmColor = new FormSeleccionarColor();
             frmColor.ElColor = lbl.BackColor;
+            frmColor.OrdenColores = OrdenColores;
             if (frmColor.ShowDialog() == DialogResult.OK)
             {
+                // Recordar el último valor usado. (27/oct/22 14.44)
+                OrdenColores = frmColor.OrdenColores;
+
                 lbl.BackColor = frmColor.ElColor;
                 int grupo = (int)lbl.Tag;
                 string grupoColor = $"Grupo-{grupo:00}";
@@ -1591,6 +1613,9 @@ No se guardan los grupos y notas en blanco.
                 string s = lbl.BackColor.ToArgb().ToString("x");
                 colorsHex[index] = s;
             }
+            // Reponer los valores que tenía antes.
+            lbl.BorderStyle = bordeAnt;
+            lbl.Height = heightAnt;
         }
 
         private void AsignarAnchors()
