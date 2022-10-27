@@ -2147,8 +2147,8 @@ namespace gsNotas
             CboNotas.Items.RemoveAt(i);
 
             // Al eliminar una nota, actualizar la lista de notas. (27/oct/22 19.17)
-            NombreGrupo = CboGrupos.Text;
-            AsignarNotas(Grupo);
+            // El valor de Grupo y NombreGrupo es CboGrupos.Text
+            AsignarNotas(CboGrupos.Text);
 
             statusInfo.Text = "Se ha eliminado la nota, el texto se deja en el editor.";
             TextoModificado = false;
