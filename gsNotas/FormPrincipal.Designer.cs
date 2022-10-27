@@ -59,6 +59,7 @@
             this.lblEdSeleccionar = new System.Windows.Forms.Label();
             this.tabBuscarTexto = new System.Windows.Forms.TabPage();
             this.panelBuscarTexto = new System.Windows.Forms.Panel();
+            this.lblGrupoBuscar = new System.Windows.Forms.Label();
             this.lblResultadoBuscar = new System.Windows.Forms.Label();
             this.lblBuscando = new System.Windows.Forms.Label();
             this.lstResultadoBuscar = new System.Windows.Forms.ListBox();
@@ -347,6 +348,7 @@
             this.cboEdGrupoNotas.Name = "cboEdGrupoNotas";
             this.cboEdGrupoNotas.Size = new System.Drawing.Size(206, 33);
             this.cboEdGrupoNotas.TabIndex = 1;
+            this.cboEdGrupoNotas.SelectedIndexChanged += new System.EventHandler(this.cboEdGrupoNotas_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -445,6 +447,7 @@
             // 
             this.panelBuscarTexto.AutoScroll = true;
             this.panelBuscarTexto.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panelBuscarTexto.Controls.Add(this.lblGrupoBuscar);
             this.panelBuscarTexto.Controls.Add(this.lblResultadoBuscar);
             this.panelBuscarTexto.Controls.Add(this.lblBuscando);
             this.panelBuscarTexto.Controls.Add(this.lstResultadoBuscar);
@@ -458,6 +461,15 @@
             this.panelBuscarTexto.Padding = new System.Windows.Forms.Padding(3);
             this.panelBuscarTexto.Size = new System.Drawing.Size(1091, 354);
             this.panelBuscarTexto.TabIndex = 0;
+            // 
+            // lblGrupoBuscar
+            // 
+            this.lblGrupoBuscar.Location = new System.Drawing.Point(215, 104);
+            this.lblGrupoBuscar.Margin = new System.Windows.Forms.Padding(3, 3, 6, 3);
+            this.lblGrupoBuscar.Name = "lblGrupoBuscar";
+            this.lblGrupoBuscar.Size = new System.Drawing.Size(403, 29);
+            this.lblGrupoBuscar.TabIndex = 7;
+            this.lblGrupoBuscar.Text = "Grupo actual: ";
             // 
             // lblResultadoBuscar
             // 
@@ -477,11 +489,11 @@
             this.lblBuscando.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblBuscando.ForeColor = System.Drawing.Color.White;
             this.lblBuscando.Location = new System.Drawing.Point(8, 313);
-            this.lblBuscando.Margin = new System.Windows.Forms.Padding(3);
+            this.lblBuscando.Margin = new System.Windows.Forms.Padding(3, 3, 6, 3);
             this.lblBuscando.Name = "lblBuscando";
-            this.lblBuscando.Size = new System.Drawing.Size(525, 35);
+            this.lblBuscando.Size = new System.Drawing.Size(610, 35);
             this.lblBuscando.TabIndex = 6;
-            this.lblBuscando.Text = "Buscando...";
+            this.lblBuscando.Text = "Indica lo que quieres buscar y pulsa en \'Buscar\'";
             // 
             // lstResultadoBuscar
             // 
@@ -509,7 +521,8 @@
             // 
             this.btnBuscar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(99)))), ((int)(((byte)(177)))));
             this.btnBuscar.ForeColor = System.Drawing.Color.White;
-            this.btnBuscar.Location = new System.Drawing.Point(421, 16);
+            this.btnBuscar.Location = new System.Drawing.Point(506, 16);
+            this.btnBuscar.Margin = new System.Windows.Forms.Padding(3, 3, 6, 3);
             this.btnBuscar.Name = "btnBuscar";
             this.btnBuscar.Size = new System.Drawing.Size(112, 40);
             this.btnBuscar.TabIndex = 2;
@@ -521,7 +534,7 @@
             // 
             this.txtBuscar.Location = new System.Drawing.Point(187, 21);
             this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(228, 31);
+            this.txtBuscar.Size = new System.Drawing.Size(313, 31);
             this.txtBuscar.TabIndex = 1;
             // 
             // lblBuscar
@@ -531,7 +544,7 @@
             this.lblBuscar.Name = "lblBuscar";
             this.lblBuscar.Size = new System.Drawing.Size(175, 29);
             this.lblBuscar.TabIndex = 0;
-            this.lblBuscar.Text = "Cambiar nombre:";
+            this.lblBuscar.Text = "Texto a buscar:";
             // 
             // tabOpciones
             // 
@@ -584,6 +597,7 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(479, 124);
             this.flowLayoutPanel1.TabIndex = 15;
+            this.toolTip1.SetToolTip(this.flowLayoutPanel1, "Pulsa en un color para cambiarlo");
             // 
             // OpcCboColorGrupo
             // 
@@ -591,10 +605,10 @@
             this.OpcCboColorGrupo.FormattingEnabled = true;
             this.OpcCboColorGrupo.Items.AddRange(new object[] {
             "Aleatorio",
-            "Predeterminado",
             "Colores 1",
             "Colores 2",
-            "Colores 3"});
+            "Colores 3",
+            "Colores 4"});
             this.OpcCboColorGrupo.Location = new System.Drawing.Point(794, 185);
             this.OpcCboColorGrupo.Name = "OpcCboColorGrupo";
             this.OpcCboColorGrupo.Size = new System.Drawing.Size(206, 33);
@@ -622,6 +636,7 @@
             this.toolTip1.SetToolTip(this.OpcChkIniciarConWindows, "Debes ejecutar la aplicación con provilegios de administrador para que surta efec" +
         "to.");
             this.OpcChkIniciarConWindows.UseVisualStyleBackColor = true;
+            this.OpcChkIniciarConWindows.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // OpcBtnGuardarEnDrive
             // 
@@ -657,6 +672,7 @@
             this.OpcChkMostrarHorizontal.TabIndex = 7;
             this.OpcChkMostrarHorizontal.Text = "Mostrar las notas horizontalmente";
             this.OpcChkMostrarHorizontal.UseVisualStyleBackColor = true;
+            this.OpcChkMostrarHorizontal.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // OpcChkOcultarPanelSuperior
             // 
@@ -667,6 +683,7 @@
             this.OpcChkOcultarPanelSuperior.TabIndex = 5;
             this.OpcChkOcultarPanelSuperior.Text = "Al iniciar la aplicación ocultar el panel superior";
             this.OpcChkOcultarPanelSuperior.UseVisualStyleBackColor = true;
+            this.OpcChkOcultarPanelSuperior.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // OpcChkMostrarMismoGrupo
             // 
@@ -677,6 +694,7 @@
             this.OpcChkMostrarMismoGrupo.TabIndex = 3;
             this.OpcChkMostrarMismoGrupo.Text = "Al iniciar la aplicación mostrar el mismo grupo que había";
             this.OpcChkMostrarMismoGrupo.UseVisualStyleBackColor = true;
+            this.OpcChkMostrarMismoGrupo.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // OpcChkIniciarMinimizada
             // 
@@ -687,6 +705,7 @@
             this.OpcChkIniciarMinimizada.TabIndex = 4;
             this.OpcChkIniciarMinimizada.Text = "Al inicar la aplicación hacerlo minimizado";
             this.OpcChkIniciarMinimizada.UseVisualStyleBackColor = true;
+            this.OpcChkIniciarMinimizada.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // OpcBtnDeshacer
             // 
@@ -721,6 +740,7 @@
             this.OpcChkMinimizarAlCerrar.TabIndex = 8;
             this.OpcChkMinimizarAlCerrar.Text = "Al cerrar (desde X de la ventana) minimizar en el área de tareas";
             this.OpcChkMinimizarAlCerrar.UseVisualStyleBackColor = true;
+            this.OpcChkMinimizarAlCerrar.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // OpcChkAjusteLineas
             // 
@@ -731,6 +751,7 @@
             this.OpcChkAjusteLineas.TabIndex = 6;
             this.OpcChkAjusteLineas.Text = "Ajuste de líneas (WordWrap)";
             this.OpcChkAjusteLineas.UseVisualStyleBackColor = true;
+            this.OpcChkAjusteLineas.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // OpcBtnRestablecerTam
             // 
@@ -754,6 +775,7 @@
             this.OpcChkRecordarTam.TabIndex = 2;
             this.OpcChkRecordarTam.Text = "Al iniciar la aplicación recordar posición y tamaño de la ventana";
             this.OpcChkRecordarTam.UseVisualStyleBackColor = true;
+            this.OpcChkRecordarTam.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // OpChkNoGuardarEnBlanco
             // 
@@ -779,6 +801,7 @@
             this.toolTip1.SetToolTip(this.OpcChkAutoGuardar, "Por ahora se crea una nueva nota en el grupo actual \r\n(cuando se cambia de grupo)" +
         " si el texto está modificado.\r\n");
             this.OpcChkAutoGuardar.UseVisualStyleBackColor = true;
+            this.OpcChkAutoGuardar.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
             // tabAcercaDe
             // 
@@ -1039,5 +1062,6 @@
         private System.Windows.Forms.Panel panelEditarGrupos;
         private System.Windows.Forms.Panel panelOpciones;
         private NotaUC notaUC1;
+        private System.Windows.Forms.Label lblGrupoBuscar;
     }
 }

@@ -122,12 +122,14 @@ namespace gsNotas
         {
             int elColorGrupo = ColorGrupo;
 
-            if (ColorGrupo < 1)
-            {
-                Random rnd = new Random();
-                // Un valor aleatorio entre 1 y 4 (inclusive)
-                elColorGrupo = rnd.Next(1, 5);
-            }
+            // Si es aleatorio, usar siempre colores aletorios. (27/oct/22 15.49)
+            //if (ColorGrupo < 1)
+            //{
+            //    Random rnd = new Random();
+            //    // Un valor aleatorio entre 1 y 4 (inclusive)
+            //    elColorGrupo = rnd.Next(1, 5);
+            //}
+
             ColoresGrupo = ElColorGrupo(elColorGrupo);
         }
 
@@ -143,49 +145,57 @@ namespace gsNotas
             bool asignar = false;
             string grupoColor = $"Grupo-{elColorGrupo:00}";
 
-            // Si existe ese grupo de colores, asignarlo. (21/oct/22 08.25)
-            if (Colores.ColoresGrupos.LosColores.ContainsKey(grupoColor))
+            // Si el color del grupo es 0 (aleatorio) no usar los colores guardados. (27/oct/22 15.44)
+            if (elColorGrupo < 1)
             {
-                // Guardar los colores en formato hexadecimal. (25/oct/22)
-                //colores = Colores.ColoresGrupos.LosColores[grupoColor];
-                colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
-                colores = Colores.ColoresFromHex(colorsHex);
-
-                // Comprobar si todos los colores están asignados. (21/oct/22 08.51)
-                var todosSinColor = colores.Where((c) => c.IsEmpty).Count();
-                if (todosSinColor == colores.Count)
-                {
-                    asignar = true;
-                    Colores.ColoresGrupos.LosColores.Remove(grupoColor);
-                }
+                colores = null;
             }
             else
             {
-                asignar = true;
-            }
-            // Si no están los colores asignados o estaban todos vacíos.
-            if (asignar)
-            {
-                if (elColorGrupo == 2)
-                    colores = new List<Color>() {Color.LightSkyBlue, Color.Gold, Color.PaleGreen, Color.MistyRose, Color.LemonChiffon,
-                                                 Color.FromArgb(0,99,177), Color.LightGoldenrodYellow, Color.AliceBlue, Color.LightGray, Color.LightPink };
-                else if (elColorGrupo == 3)
-                    // Colores pálidos
-                    colores = new List<Color>() {Color.AliceBlue, Color.LightGoldenrodYellow, Color.PaleGreen, Color.PaleTurquoise, Color.Moccasin,
-                                                 Color.SeaShell, Color.Beige, Color.LightCyan, Color.LemonChiffon, Color.MistyRose };
-                else if (elColorGrupo == 4)
-                    colores = new List<Color>() {Color.MistyRose, Color.LightSkyBlue, Color.LightGoldenrodYellow, Color.Gold, Color.Pink,
-                                                 Color.PaleGreen, Color.LemonChiffon, Color.LightGray, Color.AliceBlue, Color.FromArgb(0,99,177) };
+                // Si existe ese grupo de colores, asignarlo. (21/oct/22 08.25)
+                if (Colores.ColoresGrupos.LosColores.ContainsKey(grupoColor))
+                {
+                    // Guardar los colores en formato hexadecimal. (25/oct/22)
+                    //colores = Colores.ColoresGrupos.LosColores[grupoColor];
+                    colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
+                    colores = Colores.ColoresFromHex(colorsHex);
+
+                    // Comprobar si todos los colores están asignados. (21/oct/22 08.51)
+                    var todosSinColor = colores.Where((c) => c.IsEmpty).Count();
+                    if (todosSinColor == colores.Count)
+                    {
+                        asignar = true;
+                        Colores.ColoresGrupos.LosColores.Remove(grupoColor);
+                    }
+                }
                 else
-                    // Predeterminado (el que estaba asignado al definir ColoresGrupo.
-                    colores = new List<Color>() {Color.FromArgb(0,99,177), Color.Gold, Color.PaleGreen, Color.Pink, Color.LemonChiffon,
+                {
+                    asignar = true;
+                }
+                // Si no están los colores asignados o estaban todos vacíos.
+                if (asignar)
+                {
+                    if (elColorGrupo == 2)
+                        colores = new List<Color>() {Color.LightSkyBlue, Color.Gold, Color.PaleGreen, Color.MistyRose, Color.LemonChiffon,
+                                                 Color.FromArgb(0,99,177), Color.LightGoldenrodYellow, Color.AliceBlue, Color.LightGray, Color.LightPink };
+                    else if (elColorGrupo == 3)
+                        // Colores pálidos
+                        colores = new List<Color>() {Color.AliceBlue, Color.LightGoldenrodYellow, Color.PaleGreen, Color.PaleTurquoise, Color.Moccasin,
+                                                 Color.SeaShell, Color.Beige, Color.LightCyan, Color.LemonChiffon, Color.MistyRose };
+                    else if (elColorGrupo == 4)
+                        colores = new List<Color>() {Color.MistyRose, Color.LightSkyBlue, Color.LightGoldenrodYellow, Color.Gold, Color.Pink,
+                                                 Color.PaleGreen, Color.LemonChiffon, Color.LightGray, Color.AliceBlue, Color.FromArgb(0,99,177) };
+                    else
+                        // Predeterminado (el que estaba asignado al definir ColoresGrupo.
+                        colores = new List<Color>() {Color.FromArgb(0,99,177), Color.Gold, Color.PaleGreen, Color.Pink, Color.LemonChiffon,
                                                  Color.LightGray, Color.AliceBlue, Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow };
 
-                // Si no existe, asignarlos a la colección LosColores.
-                //Colores.ColoresGrupos.LosColores.Add(grupoColor, colores);
-                // Guardar los colores en formato hexadecimal. (25/oct/22)
-                colorsHex = Colores.ColoresToHex(colores);
-                Colores.ColoresGrupos.LosColores.Add(grupoColor, colorsHex);
+                    // Si no existe, asignarlos a la colección LosColores.
+                    //Colores.ColoresGrupos.LosColores.Add(grupoColor, colores);
+                    // Guardar los colores en formato hexadecimal. (25/oct/22)
+                    colorsHex = Colores.ColoresToHex(colores);
+                    Colores.ColoresGrupos.LosColores.Add(grupoColor, colorsHex);
+                }
             }
             // Comprobación por si no hay colores asignados.
             if (colores == null)
@@ -197,14 +207,19 @@ namespace gsNotas
             {
                 AñadirNuevoColor(colores);
             }
-            // Asignar los nuevos colores (o puede que los mismos que había).
-            // Primero quitar la clave y después asignarla con los colores.
-            Colores.ColoresGrupos.LosColores.Remove(grupoColor);
-            //Colores.ColoresGrupos.LosColores[grupoColor] = colores;
-            // Guardar los colores en formato hexadecimal. (25/oct/22)
-            colorsHex = Colores.ColoresToHex(colores);
-            Colores.ColoresGrupos.LosColores[grupoColor] = colorsHex;
-            Colores.Guardar(Colores.ColoresGrupos);
+
+            // Solo guardar los colores si no era el aleatorio. (27/oct/22 15.49)
+            if (elColorGrupo >0)
+            {
+                // Asignar los nuevos colores (o puede que los mismos que había).
+                // Primero quitar la clave y después asignarla con los colores.
+                Colores.ColoresGrupos.LosColores.Remove(grupoColor);
+                //Colores.ColoresGrupos.LosColores[grupoColor] = colores;
+                // Guardar los colores en formato hexadecimal. (25/oct/22)
+                colorsHex = Colores.ColoresToHex(colores);
+                Colores.ColoresGrupos.LosColores[grupoColor] = colorsHex;
+                Colores.Guardar(Colores.ColoresGrupos);
+            }
 
             return colores;
         }
@@ -975,12 +990,21 @@ namespace gsNotas
         {
             // Mostrar todo el formulario cuando se pulsa en una ficha
             if (OcultarPanelExpanded)
+            {
                 OcultarPanelSuperior(false);
+            }
 
             if (tabsConfig.SelectedTab.Name == "tabOpciones")
             {
                 OpcCboColorGrupo_SelectedIndexChanged(null, null);
                 OpcDeshacerCambios();
+                return;
+            }
+
+            if (tabsConfig.SelectedTab.Name == "tabBuscarTexto")
+            {
+                lblGrupoBuscar.Text = $"Grupo actual: {notaUC1.ComboGrupos.Text}";
+                lblBuscando.Text = "Indica lo que quieres buscar y pulsa en 'Buscar'";
                 return;
             }
 
@@ -1044,6 +1068,8 @@ No se guardan los grupos y notas en blanco.
             cboEdGrupoNotas.SelectedIndex = 0;
             cboEdGrupos.SelectedIndex = 0;
         }
+
+        // No estaba ligado el evento con el código. (27/oct/22 16.38)
 
         private void cboEdGrupoNotas_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1109,6 +1135,8 @@ No se guardan los grupos y notas en blanco.
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
+            lblBuscando.Text = "Buscando...";
+
             var buscar = txtBuscar.Text;
             if (string.IsNullOrWhiteSpace(buscar))
             {
@@ -1119,8 +1147,9 @@ No se guardan los grupos y notas en blanco.
             bool hallado = false;
 
             btnBuscar.Enabled = false;
-            lblBuscando.Text = "Buscando...";
+            //lblBuscando.Text = "Buscando...";
             Application.DoEvents();
+
             var grupo = notaUC1.ComboGrupos.Text;
             lstResultadoBuscar.Items.Clear();
             if (chkBuscarEnGrupoActual.Checked)
@@ -1151,9 +1180,14 @@ No se guardan los grupos y notas en blanco.
                 }
             }
             if (!hallado)
+            {
                 lblBuscando.Text = "No se ha encontrado lo que se buscaba.";
+            }
             else
+            {
                 lblBuscando.Text = $"Halladas {lstResultadoBuscar.Items.Count} coincidencias.";
+            }
+
             btnBuscar.Enabled = true;
             Application.DoEvents();
         }
@@ -1193,6 +1227,7 @@ No se guardan los grupos y notas en blanco.
 
             // Asignar el valor del color del grupo a usar (los valores van de 0 a 4)
             OpcCboColorGrupo.SelectedIndex = MySetting.ColorGrupo;
+            OrdenColores = (WellPanel.OrderES)MySetting.OrdenColores;
             OpcChkAutoGuardar.Checked = MySetting.Autoguardar;
             OpcChkRecordarTam.Checked = MySetting.RecordarTam;
             OpcChkAjusteLineas.Checked = MySetting.AjusteLineas;
@@ -1236,6 +1271,8 @@ No se guardan los grupos y notas en blanco.
             else if (OpcChkIniciarConWindows.Checked != MySetting.IniciarConWindows)
                 modificado = true;
             else if (OpcCboColorGrupo.SelectedIndex != MySetting.ColorGrupo)
+                modificado = true;
+            else if (OrdenColores != (WellPanel.OrderES)MySetting.OrdenColores)
                 modificado = true;
             //else if (OpcChkPermitirVariasInstancias.Checked != MySetting.PermitirVariasInstancias)
             //    modificado = true;
@@ -1581,6 +1618,8 @@ No se guardan los grupos y notas en blanco.
                 lbl.Tag = OpcCboColorGrupo.SelectedIndex;
                 flowLayoutPanel1.Controls.Add(lbl);
             }
+
+            OpcDatosModificados();
         }
 
         // Para el orden de colores a mostrar. (27/oct/22 14.43)
@@ -1612,6 +1651,8 @@ No se guardan los grupos y notas en blanco.
                 int index = Convert.ToInt32(lbl.Text);
                 string s = lbl.BackColor.ToArgb().ToString("x");
                 colorsHex[index] = s;
+
+                OpcDatosModificados();
             }
             // Reponer los valores que tenía antes.
             lbl.BorderStyle = bordeAnt;
