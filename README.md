@@ -9,6 +9,6 @@ Gestionar notas y grupos de notas con editor integrado.
 
 En esta nueva versión se puede personalizar los colores de los grupos de notas y guardarlos.
 
-Hay 4 grupos de colores diferentes, además de uno aleatorio.
+Hay 4 grupos de colores diferentes, además de uno aleatorio (que eligirá uno de los 4 esquemas de colores).
 
 <img width="557" alt="Screenshot 2022-10-27 152252" src="https://user-images.githubusercontent.com/71171321/198296675-e27b2fb9-60bf-4d47-a6a4-4c92fedeaa71.png">
