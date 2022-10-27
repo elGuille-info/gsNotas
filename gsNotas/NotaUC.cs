@@ -1433,9 +1433,15 @@ namespace gsNotas
                 colNotas.Add(nota);
             }
             else
+            {
                 _notas.Add(grupo, new List<string> { nota });
+            }
 
             CboNotas.Items.Add(nota);
+            // Seleccionar la última nota añadida. (27/oct/22 17.05)
+            // Si no se hace esto al reemplazar, puede reemplazar la que hubiera antes seleccionada.
+            CboNotas.SelectedIndex = CboNotas.Items.Count - 1;
+
             statusInfo.Text = "Se ha añadido una nota.";
             TextoModificado = false;
         }
@@ -1498,7 +1504,8 @@ namespace gsNotas
 
             OnNotaReemplazada(grupo, nota, CboNotas.SelectedIndex);
 
-            statusInfo.Text = $"Se ha reemplazado la nota con índice {CboNotas.SelectedIndex} en el grupo {grupo}.";
+            // Mostrar el número de nota en base 1 (humanamente es más lógico). (27/oct/22 17.10)
+            statusInfo.Text = $"Se ha reemplazado la nota con índice {CboNotas.SelectedIndex + 1} en el grupo {grupo}.";
 
             iniciando = false;
             TextoModificado = false;
@@ -1565,10 +1572,12 @@ namespace gsNotas
         [Browsable(false)]
         public void AsignarNotas(string grupo)
         {
-            CboNotas.Items.Clear();
-
             if (string.IsNullOrEmpty(grupo) || !_notas.ContainsKey(grupo))
                 return;
+
+            //iniciando = true;
+
+            CboNotas.Items.Clear();
 
             if (_notas.TryGetValue(grupo, out List<string> colNotas))
             {
@@ -1585,6 +1594,8 @@ namespace gsNotas
                 if (CboNotas.Items.Count > 0)
                     CboNotas.SelectedIndex = 0;
             }
+            //iniciando = false;
+
             OnGrupoCambiado(CboGrupos.Text, CboGrupos.SelectedIndex);
             statusInfo.Text = $"Se han asignado las notas al grupo {grupo}.";
             TextoModificado = false;
@@ -1607,7 +1618,7 @@ namespace gsNotas
                     if (CboNotas.Items.Count > 0 && index < CboNotas.Items.Count)
                     {
                         CboNotas.SelectedIndex = index;
-                        statusInfo.Text = $"Se ha seleccionado la nota {index} del grupo {Grupo}.";
+                        statusInfo.Text = $"Se ha seleccionado la nota {index + 1} del grupo {Grupo}.";
                     }
                 }
                 else
@@ -1615,7 +1626,7 @@ namespace gsNotas
                     if (CboGrupos.Items.Count > 0 && index < CboGrupos.Items.Count)
                     {
                         CboGrupos.SelectedIndex = index;
-                        statusInfo.Text = $"Se ha seleccionado el grupo con índice {index}.";
+                        statusInfo.Text = $"Se ha seleccionado el grupo con índice {index + 1}.";
                     }
                 }
             }
@@ -1745,8 +1756,6 @@ namespace gsNotas
             NombreGrupo = CboGrupos.Text;
             GrupoIndex = CboGrupos.SelectedIndex;
 
-            //Titulo = $"'{Grupo} - {TituloNota}'";
-
             Titulo = $"Notas de '{Grupo}'";
 
             if (CboGrupos.Items.Count > 0 && CboGrupos.SelectedIndex != -1)
@@ -1755,6 +1764,8 @@ namespace gsNotas
             // Si es autoguardar y se cambia de grupo
             // asignar el texto actual a una nueva nota del grupo anterior
             // si el texto ha cambiado
+            //
+            // Ahora sustituye la nota anterior con el nuevo texto. (27/oct/22 18.56)
 
             // esto no debería darse
             if (string.IsNullOrEmpty(NombreGrupoAnterior))
@@ -1763,11 +1774,20 @@ namespace gsNotas
             if (AutoGuardar && NombreGrupoAnterior != Grupo && TextoModificado)
             {
                 if (_notas.Keys.Contains(NombreGrupoAnterior))
-                    _notas[NombreGrupoAnterior].Add(txtEdit.Text);
+                {
+                    if (CboNotasIndiceAnterior > -1)
+                    {
+                        _notas[NombreGrupoAnterior][CboNotasIndiceAnterior] = txtEdit.Text;
+                    }
+                    else
+                    {
+                        _notas[NombreGrupoAnterior].Add(txtEdit.Text);
+                    }
+                }
             }
-            AsignarNotas(Grupo);
-
             TextoModificado = false;
+
+            AsignarNotas(Grupo);
 
             statusInfo.Text = $"Grupo: '{Grupo}' con {CboNotas.Items.Count} nota{(CboNotas.Items.Count == 1 ? "" : "s")}";
         }
@@ -1795,12 +1815,16 @@ namespace gsNotas
             TextoModificado = false;
         }
 
+        private int CboNotasIndiceAnterior = -1;
         private void CboNotas_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (iniciando) return;
 
             if (string.IsNullOrEmpty(NombreGrupo))
+            {
                 NombreGrupo = CboGrupos.Text;
+            }
+
             NombreGrupoAnterior = NombreGrupo;
             NombreGrupo = CboGrupos.Text;
 
@@ -1810,16 +1834,34 @@ namespace gsNotas
             {
                 if (_notas.Keys.Contains(NombreGrupo))
                 {
-                    var notaAnt = CboNotas.Text;
-                    _notas[NombreGrupo].Add(txtEdit.Text);
-                    iniciando = true;
-                    CboNotas.Items.Add(txtEdit.Text);
-                    CboNotas.Text = notaAnt;
-                    iniciando = false;
+                    // Reemplazar la nota actualmente en edición. (27/oct/22 17.39)
+                    // Este sería el nuevo índice seleccionado.
+                    //int index = CboNotas.SelectedIndex;
+                    if (CboNotasIndiceAnterior > -1)
+                    {
+                        _notas[NombreGrupoAnterior][CboNotasIndiceAnterior] = txtEdit.Text;
+                        Modificado = true;
+                        // También hay que sustituir el contenido de CboNotas.
+                        iniciando = true;
+                        CboNotas.Items[CboNotasIndiceAnterior] = txtEdit.Text;
+                        iniciando = false;
+                    }
+                    else
+                    {
+                        var notaAnt = CboNotas.Text;
+                        _notas[NombreGrupo].Add(txtEdit.Text);
+                        iniciando = true;
+                        CboNotas.Items.Add(txtEdit.Text);
+                        CboNotas.Text = notaAnt;
+                        iniciando = false;
+                    }
                 }
             }
             txtEdit.Text = Nota;
             TextoModificado = false;
+
+            // El índice de la nota seleccionada. (27/oct/22 17.46)
+            CboNotasIndiceAnterior = CboNotas.SelectedIndex;
 
             OnNotaCambiada(Nota, CboNotas.SelectedIndex);
             statusInfo.Text = $"Grupo: '{Grupo}' con {CboNotas.Items.Count} nota{(CboNotas.Items.Count == 1 ? "" : "s")}";
@@ -2119,7 +2161,7 @@ namespace gsNotas
                 msgVersion = $"Esta versión de '{Application.ProductName}' es la más reciente.";
 
             // Mostrar acerca de
-            var titulo = $"Acerca de {Application.ProductName} v{Application.ProductVersion}";
+            var titulo = $"{Application.ProductName} v{Application.ProductVersion}";
             MessageBox.Show(@$"Acerca de {titulo}
 
 Utilidad para crear notas y grupos de notas.
@@ -2291,6 +2333,17 @@ No se guardan los grupos y notas en blanco.
         {
             statusInfoTecla.Text = "Ctrl+V";
             txtEdit.Paste();
+        }
+
+        // Pegar con el formato del texto guardado. (27/oct/22 16.49)
+        // Por si se copia el texto del fichero de notas y se pega.
+
+        private void mnuPegarFormato_Click(object sender, EventArgs e)
+        {
+            // Convertir el texto en el portapales a texto normal.
+            statusInfoTecla.Text = "Ctrl+Alt+V";
+            string s = Clipboard.GetText();
+            txtEdit.Text = espPoner(s);
         }
 
         private void mnuCopiar_Click(object sender, EventArgs e)

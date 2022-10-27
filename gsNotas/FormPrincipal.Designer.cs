@@ -788,6 +788,7 @@
             this.OpChkNoGuardarEnBlanco.Size = new System.Drawing.Size(260, 29);
             this.OpChkNoGuardarEnBlanco.TabIndex = 1;
             this.OpChkNoGuardarEnBlanco.Text = "No guardar notas en blanco";
+            this.toolTip1.SetToolTip(this.OpChkNoGuardarEnBlanco, "Esta opción siempre está activa.");
             this.OpChkNoGuardarEnBlanco.UseVisualStyleBackColor = true;
             // 
             // OpcChkAutoGuardar
@@ -798,8 +799,8 @@
             this.OpcChkAutoGuardar.Size = new System.Drawing.Size(545, 29);
             this.OpcChkAutoGuardar.TabIndex = 0;
             this.OpcChkAutoGuardar.Text = "Auto guardar las notas (se actualiza al cambiar de nota o grupo)";
-            this.toolTip1.SetToolTip(this.OpcChkAutoGuardar, "Por ahora se crea una nueva nota en el grupo actual \r\n(cuando se cambia de grupo)" +
-        " si el texto está modificado.\r\n");
+            this.toolTip1.SetToolTip(this.OpcChkAutoGuardar, "Si está seleccionada y se modifica una nota, se añadirá una nueva nota con el tex" +
+        "to modificado (no se reemplaza la nota modificada)");
             this.OpcChkAutoGuardar.UseVisualStyleBackColor = true;
             this.OpcChkAutoGuardar.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
