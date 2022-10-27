@@ -1836,7 +1836,6 @@ namespace gsNotas
                 {
                     // Reemplazar la nota actualmente en edición. (27/oct/22 17.39)
                     // Este sería el nuevo índice seleccionado.
-                    //int index = CboNotas.SelectedIndex;
                     if (CboNotasIndiceAnterior > -1)
                     {
                         _notas[NombreGrupoAnterior][CboNotasIndiceAnterior] = txtEdit.Text;
@@ -1846,15 +1845,15 @@ namespace gsNotas
                         CboNotas.Items[CboNotasIndiceAnterior] = txtEdit.Text;
                         iniciando = false;
                     }
-                    else
-                    {
-                        var notaAnt = CboNotas.Text;
-                        _notas[NombreGrupo].Add(txtEdit.Text);
-                        iniciando = true;
-                        CboNotas.Items.Add(txtEdit.Text);
-                        CboNotas.Text = notaAnt;
-                        iniciando = false;
-                    }
+                    //else
+                    //{
+                    //    var notaAnt = CboNotas.Text;
+                    //    _notas[NombreGrupo].Add(txtEdit.Text);
+                    //    iniciando = true;
+                    //    CboNotas.Items.Add(txtEdit.Text);
+                    //    CboNotas.Text = notaAnt;
+                    //    iniciando = false;
+                    //}
                 }
             }
             txtEdit.Text = Nota;
@@ -1974,12 +1973,20 @@ namespace gsNotas
             {
                 // Añadir el grupo
                 _notas.Add(g, new List<string>() { txtEdit.Text });
+                // Para que no se sustituya la nota anterior. (27/oct/22 19.25)
+                TextoModificado = false;
+                CboNotasIndiceAnterior = -1;
+
                 GruposAdd(g);
                 OnGrupoCambiado(g, CboGrupos.SelectedIndex);
             }
             else
             {
+                // Para que no se sustituya la nota anterior. (27/oct/22 19.29)
+                CboNotasIndiceAnterior = -1;
+
                 NotasAdd(g, txtEdit.Text);
+
                 TextoModificado = false;
                 OnNotaCambiada(txtEdit.Text, CboNotas.SelectedIndex);
             }
@@ -2138,6 +2145,10 @@ namespace gsNotas
 
             Notas[CboGrupos.Text].Remove(CboNotas.Text);
             CboNotas.Items.RemoveAt(i);
+
+            // Al eliminar una nota, actualizar la lista de notas. (27/oct/22 19.17)
+            NombreGrupo = CboGrupos.Text;
+            AsignarNotas(Grupo);
 
             statusInfo.Text = "Se ha eliminado la nota, el texto se deja en el editor.";
             TextoModificado = false;
