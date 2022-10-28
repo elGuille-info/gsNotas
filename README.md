@@ -31,6 +31,8 @@ Gestionar notas y grupos de notas con editor integrado.
   - Al pulsar F8 no se sustituye la nota actual con el nuevo texto (se añade una nota nueva, pero sin sustituir el texto anterior).
   - Para sustituir el texto de una nota, pulsa Shift+F8 (mayúsculas + F8).
 
+<br>
+
 ## TODO
 
 Cosillas que me gustaría añadir.
