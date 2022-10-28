@@ -30,3 +30,15 @@ Gestionar notas y grupos de notas con editor integrado.
 - Al modificar una nota y cambiar de nota o de grupo se sustituye el texto de esa nota (antes se agregaba una nueva nota).
   - Al pulsar F8 no se sustituye la nota actual con el nuevo texto (se añade una nota nueva, pero sin sustituir el texto anterior).
   - Para sustituir el texto de una nota, pulsa Shift+F8 (mayúsculas + F8).
+
+## TODO
+
+Cosillas que me gustaría añadir.
+
+  - Acoplar la ventana a la izquierda o la derecha.
+  - Mostrar las notas en una sola fila.
+  - Cambiar el alto de los grupos y poder mostrarlos en una fila.
+  - Cambiar los colores de los temas claro y oscuro (letra y fondo) en tiempo de ejecución (ahora se puede hacer en tiempo de diseño).
+  - Añadir las notas (o las seleccionadas) a Keep de Google.
+  - Ídem a Google Drive (las seleccionadas, no todas).
+  - Cargar las notas de una de las copias/backup pero no usando importar (con formato NotaUC), si no, para reemplazar el contenido actual.
