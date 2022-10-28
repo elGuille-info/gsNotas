@@ -40,17 +40,12 @@ namespace gsNotas
         /// <summary>
         /// Si se quiere o no mostrar el aviso en caso de error al escribir en el registro.
         /// </summary>
-        private bool mostrarAvisoReg = false;
+        private bool mostrarAvisoReg { get; set; } = false;
 
         /// <summary>
         /// Acceso a los datos de configuración.
         /// </summary>
         private Properties.Settings MySetting = Properties.Settings.Default;
-
-        ///// <summary>
-        ///// Array con los controles a no asignar cuando se permite cambiar el tamaño y posición.
-        ///// </summary>
-        //private readonly string[] NoAsignar;
 
         /// <summary>
         /// Para controlar que no re-entre en un método de evento.
@@ -59,20 +54,20 @@ namespace gsNotas
         /// <summary>
         /// Colección con las notas del grupo seleccionado. A mostrar en la ficha Notas.
         /// </summary>
-        private readonly List<Label> CtrlNotas = new List<Label>();
+        private List<Label> CtrlNotas { get; set; } = new List<Label>();
         /// <summary>
         /// Colección con los grupos mostrados en la ficha de Grupos.
         /// </summary>
-        private readonly List<Label> CtrlGrupos = new List<Label>();
+        private List<Label> CtrlGrupos { get; set; } = new List<Label>();
         /// <summary>
         /// El grupo seleccionado del combo.
         /// </summary>
-        private string ElGrupo;
+        private string ElGrupo { get; set; }
 
         /// <summary>
         /// El índice del grupo seleccionado.
         /// </summary>
-        private int ElGrupoIndex;
+        private int ElGrupoIndex { get; set; }
 
         /// <summary>
         /// El color de grupo a usar.
@@ -87,7 +82,7 @@ namespace gsNotas
         /// <summary>
         /// El tamaño normal de las notas y grupos en el panel.
         /// </summary>
-        private readonly Size NormalSize = Program.SizeNet(180, 80); // new Size(180, 80);
+        private Size NormalSize { get => Program.SizeNet(180, 80); } // new Size(180, 80);
 
         /// <summary>
         /// El tamaño de las notas si se elige mostrar en horizontal.
@@ -98,7 +93,7 @@ namespace gsNotas
         /// <summary>
         /// El tamaño a usar en las notas
         /// </summary>
-        private Size NotasSize = Program.SizeNet(180, 80); // new Size(180, 80);
+        private Size NotasSize { get; set; } = Program.SizeNet(180, 80); // new Size(180, 80);
 
         public FormPrincipal()
         {
@@ -177,18 +172,18 @@ namespace gsNotas
                 {
                     if (elColorGrupo == 2)
                         colores = new List<Color>() {Color.LightSkyBlue, Color.Gold, Color.PaleGreen, Color.MistyRose, Color.LemonChiffon,
-                                                 Color.FromArgb(0,99,177), Color.LightGoldenrodYellow, Color.AliceBlue, Color.LightGray, Color.LightPink };
+                                                     Color.FromArgb(0,99,177), Color.LightGoldenrodYellow, Color.AliceBlue, Color.LightGray, Color.LightPink };
                     else if (elColorGrupo == 3)
                         // Colores pálidos
                         colores = new List<Color>() {Color.AliceBlue, Color.LightGoldenrodYellow, Color.PaleGreen, Color.PaleTurquoise, Color.Moccasin,
-                                                 Color.SeaShell, Color.Beige, Color.LightCyan, Color.LemonChiffon, Color.MistyRose };
+                                                     Color.SeaShell, Color.Beige, Color.LightCyan, Color.LemonChiffon, Color.MistyRose };
                     else if (elColorGrupo == 4)
                         colores = new List<Color>() {Color.MistyRose, Color.LightSkyBlue, Color.LightGoldenrodYellow, Color.Gold, Color.Pink,
-                                                 Color.PaleGreen, Color.LemonChiffon, Color.LightGray, Color.AliceBlue, Color.FromArgb(0,99,177) };
+                                                     Color.PaleGreen, Color.LemonChiffon, Color.LightGray, Color.AliceBlue, Color.FromArgb(0,99,177) };
                     else
                         // Predeterminado (el que estaba asignado al definir ColoresGrupo.
                         colores = new List<Color>() {Color.FromArgb(0,99,177), Color.Gold, Color.PaleGreen, Color.Pink, Color.LemonChiffon,
-                                                 Color.LightGray, Color.AliceBlue, Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow };
+                                                     Color.LightGray, Color.AliceBlue, Color.LightPink, Color.LightSkyBlue, Color.LightGoldenrodYellow };
 
                     // Si no existe, asignarlos a la colección LosColores.
                     //Colores.ColoresGrupos.LosColores.Add(grupoColor, colores);
@@ -313,10 +308,13 @@ namespace gsNotas
                     notaUC1.GuardarNotas();
                 }
             }
-            if (notaUC1.Tema == Temas.Claro || notaUC1.Tema == Temas.Light)
-                MySetting.Tema = "Claro";
-            else
-                MySetting.Tema = "Oscuro";
+            
+            // Que el valor de MySetting.Tema siempre tenga Claro u Oscuro. (28/oct/22 13.46)
+            MySetting.Tema = notaUC1.Tema == (int)Temas.Claro ? "Claro" : "Oscuro";
+            //if (notaUC1.Tema == Temas.Claro || notaUC1.Tema == Temas.Light)
+            //    MySetting.Tema = "Claro";
+            //else
+            //    MySetting.Tema = "Oscuro";
 
             // No hace falta asignarlos, tienen los mismos valores
             if (this.WindowState == FormWindowState.Normal)
@@ -414,12 +412,18 @@ namespace gsNotas
             for (var i = 0; i < CtrlGrupos.Count; i++)
             {
                 if (i == index)
+                {
                     AsignarValores(CtrlGrupos[i], true, esNota: false);
+                }
                 else
+                {
                     AsignarValores(CtrlGrupos[i], false, esNota: false);
+                }
             }
             if (notaUC1.ComboGrupos.Text != ElGrupo)
+            {
                 notaUC1.ComboGrupos.Text = ElGrupo;
+            }
 
             // mostrar la primera nota
             MostrarNotas(grupo, 0);
@@ -435,14 +439,25 @@ namespace gsNotas
             for (var i = 0; i < CtrlNotas.Count; i++)
             {
                 if (i == index)
+                {
                     AsignarValores(CtrlNotas[i], true, true);
+                }
                 else
+                {
                     AsignarValores(CtrlNotas[i], false, true);
+                }
             }
         }
 
+        /// <summary>
+        /// Asignar los valores a la etiqueta
+        /// </summary>
+        /// <param name="lbl">La etiqueta de la nota o grupo.</param>
+        /// <param name="esSeleccionado">Si está seleccionada.</param>
+        /// <param name="esNota">True si es nota, false si es grupo.</param>
         private void AsignarValores(Label lbl, bool esSeleccionado, bool esNota)
         {
+            // Si está seleccionada.
             if (esSeleccionado)
             {
                 lbl.FlatStyle = FlatStyle.Popup;
@@ -452,18 +467,16 @@ namespace gsNotas
                 {
                     lbl.Font = new Font(LblNota.Font, FontStyle.Bold);
                     
-                    // Si queremos que se separe del resto de etiquetas
-                    //if(MySetting.VistaNotasHorizontal)
-                    //    NotasFlowLayoutPanel.SetFlowBreak(lbl, true);
-                    //else
-                    //    NotasFlowLayoutPanel.SetFlowBreak(lbl, false);
-
                     // Asignar el tamaño grande de la nota seleccionada
                     // lo dejo al doble de ancho cuando no se muestra horizontal
                     if (MySetting.VistaNotasHorizontal)
+                    {
                         lbl.Width = NotasSize.Width;
+                    }
                     else
+                    {
                         lbl.Width = NormalSize.Width * 2;
+                    }
                 }
                 else
                 {
@@ -496,7 +509,7 @@ namespace gsNotas
         /// <param name="index">Indica la nota a marcar como seleccionada.</param>
         private void MostrarNotas(string grupo, int index)
         {
-            Color col = AsignarColoresGrupos();
+            //Color col = AsignarColoresGrupos();
 
             CtrlNotas.Clear();
             NotasFlowLayoutPanel.Controls.Clear();
@@ -508,8 +521,12 @@ namespace gsNotas
             if (!notaUC1.Notas.ContainsKey(grupo))
                 return;
 
-            // Poner color aleatorio a cada grupo
-            col = ColoresGrupo[ElGrupoIndex];
+            // Poner el color a cada grupo
+            // Asegurarse que todos los grupos tienen color asignado.
+            _ = AsignarColoresGrupos();
+
+            // Asignar a las notas el color del grupo.
+            Color col = ColoresGrupo[ElGrupoIndex];
             for (var j = 0; j < notaUC1.Notas[grupo].Count; j++)
             {
                 var n = notaUC1.Notas[grupo][j];
@@ -570,7 +587,7 @@ namespace gsNotas
         /// <param name="index"></param>
         private void MostrarGrupos(string grupo, int index)
         {
-            Color col = AsignarColoresGrupos();
+            //Color col = AsignarColoresGrupos();
 
             CtrlGrupos.Clear();
             GruposFlowLayoutPanel.Controls.Clear();
@@ -580,11 +597,14 @@ namespace gsNotas
                 return;
 
             // Poner color aleatorio a cada grupo
-            //col = ColoresGrupo[ElGrupoIndex];
+            // Asegurarse que todos los grupos tienen color asignado.
+            _ = AsignarColoresGrupos();
+
             int ind = 0;
             foreach (var n in notaUC1.Notas.Keys)
             {
-                col = ColoresGrupo[ind];
+                // Asignar a cada grupo el color que le corresponde.
+                Color col = ColoresGrupo[ind];
                 var s = $"{n}\n\rGrupo con {notaUC1.Notas[n].Count} notas.";
                 var lbl = CrearNota(s, col, false);
                 lbl.Click += LblGrupo_Click;
@@ -601,57 +621,17 @@ namespace gsNotas
         }
 
         /// <summary>
-        /// Asignar los colores para que haya para todos los grupos de notas.
+        /// Asignar colores para que haya para todos los grupos de notas.
         /// </summary>
+        /// <remarks>Solo se añadirán nuevos colores aleatorios si hay más grupos que colores asignados.</remarks>
+        /// <returns>El último color asignado.</returns>
         private Color AsignarColoresGrupos()
         {
             Color col = GetRandomColor();
             var rnd = new Random();
 
-            //if (ColoresGrupo.Count == 0)
-            //{
-            //    for (var j = 0; j < notaUC1.Notas.Keys.Count; j++)
-            //    {
-            //        ColoresGrupo.Add(col);
-            //        var n = rnd.Next(1, 4);
-            //        byte r = col.R, g = col.G, b = col.B;
-            //        if (n == 1)
-            //            r = 0;
-            //        else if (n == 2)
-            //            g = 0;
-            //        else if (n == 3)
-            //            b = 0;
-            //        Color col2;
-            //        do
-            //        {
-            //            col2 = GetRandomColor(r, g, b);
-            //        } while (col.Equals(col2));
-            //        col = col2;
-            //    }
-            //}
-            //else if (ColoresGrupo.Count < notaUC1.Notas.Keys.Count)
-            //{
-            //    for (var j = ColoresGrupo.Count; j < notaUC1.Notas.Keys.Count; j++)
-            //    {
-            //        var n = rnd.Next(1, 4);
-            //        byte r = col.R, g = col.G, b = col.B;
-            //        if (n == 1)
-            //            r = 0;
-            //        else if (n == 2)
-            //            g = 0;
-            //        else if (n == 3)
-            //            b = 0;
-            //        Color col2;
-            //        do
-            //        {
-            //            col2 = GetRandomColor(r, g, b);
-            //        } while (col.Equals(col2));
-            //        col = col2;
-
-            //        ColoresGrupo.Add(col);
-            //    }
-            //}
             // No es necesario hacer la comprobación de si no hay datos de colores. (18/oct/22 17.11)
+            // Esto hará que se asignen colores a todos los grupos de notas.
             for (var j = ColoresGrupo.Count; j < notaUC1.Notas.Keys.Count; j++)
             {
                 var n = rnd.Next(1, 4);
@@ -807,7 +787,9 @@ namespace gsNotas
             MySetting.InvertirColores = notaUC1.InvertirColores;
 
             // Asignar el tema. (19/oct/22 05.53)
-            MySetting.Tema = notaUC1.Tema.ToString();
+            // Que el valor de MySetting.Tema siempre tenga Claro u Oscuro. (28/oct/22 13.46)
+            MySetting.Tema = notaUC1.Tema == (int)Temas.Claro ? "Claro" : "Oscuro";
+            //MySetting.Tema = notaUC1.Tema.ToString();
 
             this.BackColor = notaUC1.BackColor;
             this.ForeColor = notaUC1.ForeColor;
@@ -860,12 +842,13 @@ namespace gsNotas
 
             if (ctr.Controls is null) return;
 
-            // no cambiar los colores delcontenido de los flowLayout
+            // no cambiar los colores del contenido de los flowLayout
             if (ctr.Name.IndexOf("FlowLayout") > -1)
                 return;
 
             foreach (Control c in ctr.Controls)
             {
+                // si es un botón, asignar los colores invertidos.
                 AsignarColores(c, c is Button);
             }
         }
@@ -883,7 +866,9 @@ namespace gsNotas
                 NotasSize = HorizontalSize;
             }
             else
+            {
                 NotasSize = NormalSize;
+            }
 
             NotasFlowLayoutPanel.WrapContents = MySetting.VistaNotasHorizontal;
 
@@ -892,10 +877,11 @@ namespace gsNotas
             IniciarConWindows = MySetting.IniciarConWindows;
 
             // los valores a asignar a NotaUC
-            if (MySetting.Tema == "Claro")
-                notaUC1.Tema = Temas.Claro;
-            else
-                notaUC1.Tema = Temas.Oscuro;
+            notaUC1.Tema = MySetting.Tema == "Claro" ? Temas.Claro : Temas.Oscuro;
+            //if (MySetting.Tema == "Claro")
+            //    notaUC1.Tema = Temas.Claro;
+            //else
+            //    notaUC1.Tema = Temas.Oscuro;
 
             notaUC1.SiempreEncima = MySetting.SiempreEncima;
 
@@ -911,7 +897,9 @@ namespace gsNotas
             {
                 // Si Left tiene un valor pequeño y solo hay una pantalla, ponerlo a cero.
                 if (MySetting.Left < 0 && Screen.AllScreens.Length < 2)
+                {
                     MySetting.Left = 0;
+                }
 
                 TamApp = (MySetting.Left, MySetting.Top, MySetting.Width, MySetting.Height);
             }
@@ -1518,14 +1506,18 @@ No se guardan los grupos y notas en blanco.
                 catch (Exception ex)
                 {
                     if (mostrarAvisoReg)
+                    {
                         MessageBox.Show("ERROR al guardar en el registro.\r\n" +
                             "Seguramente no tienes privilegios suficientes.\r\n" +
                             ex.Message + "\r\n---xxx---\r\n" +
                             ex.StackTrace,
                             "Iniciar automáticamente con Windows",
                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
                     else
+                    {
                         notaUC1.StatusInfo = "Error al guardar en el registro.";
+                    }
                 }
             }
         }
