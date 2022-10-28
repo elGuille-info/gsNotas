@@ -227,6 +227,10 @@ namespace gsNotas
             notifyIcon1.Icon = this.Icon;
             notifyIcon1.Visible = true;
 
+            // Ajustar los settings para cuando cambie de versión. (28/oct/22 14.34)
+            MySetting.Upgrade();
+            MySetting.Save();
+
             var grupoTmp = MySetting.UltimoGrupo;
 
             //TabsConfigHeightNormal = tabsConfig.Height;
