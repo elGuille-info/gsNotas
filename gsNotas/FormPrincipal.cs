@@ -917,10 +917,15 @@ namespace gsNotas
         {
             // Eliminar el grupo seleccionado
             var grupo = cboEdGrupos.Text;
-            if (MessageBox.Show($"¿Quieres eliminar el grupo '{grupo}' y todo su contenido?", "Eliminar grupo", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            if (MessageBox.Show($"¿Quieres eliminar el grupo '{grupo}' y todo su contenido?", 
+                                 "Eliminar grupo", 
+                                 MessageBoxButtons.YesNo, 
+                                 MessageBoxIcon.Warning) == DialogResult.No)
+            {
                 return;
+            }
+
             iniciando = true;
-            //notaUC1.Notas[grupo].RemoveRange(0, notaUC1.Notas[grupo].Count);
             notaUC1.Notas.Remove(grupo);
             cboEdGrupos.Items.Clear();
             foreach (var g in notaUC1.Notas.Keys)
@@ -944,7 +949,9 @@ namespace gsNotas
             // si no existe, se crea el grupo y se copian los datos
             // después se eliminan las notas del grupo de origen
             if (!notaUC1.Notas.ContainsKey(nuevoGrupo))
+            {
                 notaUC1.Notas.Add(nuevoGrupo, new List<string>());
+            }
 
             notaUC1.Notas[nuevoGrupo].AddRange(notaUC1.Notas[grupo]);
             notaUC1.Notas.Remove(grupo);
@@ -1135,7 +1142,6 @@ No se guardan los grupos y notas en blanco.
             bool hallado = false;
 
             btnBuscar.Enabled = false;
-            //lblBuscando.Text = "Buscando...";
             Application.DoEvents();
 
             var grupo = notaUC1.ComboGrupos.Text;
@@ -1464,8 +1470,7 @@ No se guardan los grupos y notas en blanco.
         }
 
         /// <summary>
-        /// Indicar si se inicia con Windows.
-        /// Modificando el registro de Windows.
+        /// Indicar si se inicia con Windows. Modificando el registro de Windows.
         /// </summary>
         /// <remarks>Debes ejecutar la aplicación con permisos de administrador.</remarks>
         private bool IniciarConWindows
@@ -1548,17 +1553,6 @@ No se guardan los grupos y notas en blanco.
         /// <param name="colores">Colección con los colores que hay para no repetir.</param>
         private void AñadirNuevoColor(List<Color> colores)
         {
-            //var rnd = new Random();
-            //var col = colores[0];
-
-            //var n = rnd.Next(1, 4);
-            //byte r = col.R, g = col.G, b = col.B;
-            //if (n == 1)
-            //    r = 0;
-            //else if (n == 2)
-            //    g = 0;
-            //else if (n == 3)
-            //    b = 0;
             Color col2;
             do
             {
@@ -1566,8 +1560,6 @@ No se guardan los grupos y notas en blanco.
             } while (colores.Contains(col2));
 
             colores.Add(col2);
-
-            //return col2;
         }
 
         // Mostrar los colores de las etiquetas según el grupo seleccionado. (18/oct/22 21.30)
@@ -1651,6 +1643,9 @@ No se guardan los grupos y notas en blanco.
             lbl.Height = heightAnt;
         }
 
+        /// <summary>
+        /// Asignar los anchors de los controles de las opciones, porque no siempre lo hace correctamente (al menos con .NET Framework).
+        /// </summary>
         private void AsignarAnchors()
         {
             lblResultadoBuscar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
