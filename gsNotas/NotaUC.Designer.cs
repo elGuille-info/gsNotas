@@ -325,6 +325,7 @@ namespace gsNotas
             this.MnuTemaColoresPredeterminados.Name = "MnuTemaColoresPredeterminados";
             this.MnuTemaColoresPredeterminados.Size = new System.Drawing.Size(352, 34);
             this.MnuTemaColoresPredeterminados.Text = "Usar colores predeterminados";
+            this.MnuTemaColoresPredeterminados.ToolTipText = "Usar los colores predeterminados de los temas (no los definidos en diseño)";
             this.MnuTemaColoresPredeterminados.Click += new System.EventHandler(this.MnuTemaColoresPredeterminados_Click);
             // 
             // toolStripSeparator2

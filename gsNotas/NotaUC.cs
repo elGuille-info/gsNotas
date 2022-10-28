@@ -652,6 +652,10 @@ namespace gsNotas
             set => MnuTopMost.Checked = value;
         }
 
+        // Los colores predeterminados de los temas. (28/oct/22 12.43)
+        private readonly static Color[] ColoresOscuroPredeterminado = new Color[] { Color.FromArgb(30, 30, 30), Color.FromArgb(87, 166, 58) };
+        private readonly static Color[] ColoresClaroPredeterminado = new Color[] { Color.White, Color.FromArgb(0, 99, 177) };
+
         private bool _ColoresPredeterminados = true;
 
         /// <summary>
@@ -669,9 +673,9 @@ namespace gsNotas
                 _ColoresPredeterminados = value;
                 if (value)
                 {
-                    // Asignar los colores.
-                    ColoresOscuro = new Color[] { Color.FromArgb(30, 30, 30), Color.FromArgb(87, 166, 58) };
-                    ColoresClaro = new Color[] { Color.White, Color.FromArgb(0, 99, 177) };
+                    // Asignar los colores predeterminados.
+                    ColoresOscuro = ColoresOscuroPredeterminado;
+                    ColoresClaro = ColoresClaroPredeterminado;
                 }
             }
         }
@@ -684,36 +688,18 @@ namespace gsNotas
         [Description("Colores a usar en el tema Oscuro. Fondo negro, letras verde.")]
         [DefaultValue(typeof(Color[]), "(30, 30, 30), (87, 166, 58)")]
         [Category("Colores")]
-        public Color[] ColoresOscuro { get; set; } = new Color[] { Color.FromArgb(30, 30, 30), Color.FromArgb(87, 166, 58) };
-
-        //private Color[] _ColoresOscuro = new Color[] { Color.FromArgb(30, 30, 30), Color.FromArgb(87, 166, 58) };
-        //public Color[] ColoresOscuro 
-        //{ 
-        //    get { return _ColoresOscuro; }
-        //    set
-        //    {
-        //        if (ColoresPredeterminados)
-        //        {
-        //            value = new Color[] { Color.FromArgb(30, 30, 30), Color.FromArgb(87, 166, 58) };
-        //        }
-        //        _ColoresOscuro = value;
-        //    }
-        //}
-
-        //public Color[] ColoresOscuro { get; set; } = new Color[] { Color.FromArgb(30, 30, 30), Color.FromArgb(87, 166, 58) };
-        //public Color[] ColoresOscuro { get; set; } = new Color[] { Color.Black, Color.Green};
-        //public Color[] ColoresOscuro { get; set; } = new Color[] { Color.DimGray, Color.Lime};
-        //public Color[] ColoresOscuro { get; set; } = new Color[] { Color.DimGray, Color.Gold};
+        public Color[] ColoresOscuro { get; set; } = ColoresOscuroPredeterminado;
 
         /// <summary>
         /// Colores a usar en el tema Claro.
         /// Fondo blanco, letras en color azul 0,99,177.
         /// </summary>
+        /// <remarks>Si ColoresPredeterminados es true, no se asignan los nuevos colores.</remarks>
         [Browsable(true)]
         [Description("Colores a usar en el tema Claro. Fondo blanco, letras en color azul (0,99,177).")]
         [DefaultValue(typeof(Color[]), "White, (0,99,177)")]
         [Category("Colores")]
-        public Color[] ColoresClaro { get; set; } = new Color[] { Color.White, Color.FromArgb(0, 99, 177) };
+        public Color[] ColoresClaro { get; set; } = ColoresClaroPredeterminado;
 
         private Temas _Tema = Temas.Claro;
 
@@ -730,31 +716,66 @@ namespace gsNotas
             set
             {
                 _Tema = value;
-                if (_Tema == Temas.Claro)
+                AsignarTema(value);
+                //if (_Tema == Temas.Claro)
+                //{
+                //    if (_invertirColores)
+                //    {
+                //        BackColor = ColoresClaro[1];
+                //        ForeColor = ColoresClaro[0];
+                //    }
+                //    else
+                //    {
+                //        BackColor = ColoresClaro[0];
+                //        ForeColor = ColoresClaro[1];
+                //    }
+                //}
+                //else
+                //{
+                //    if (_invertirColores)
+                //    {
+                //        BackColor = ColoresOscuro[1];
+                //        ForeColor = ColoresOscuro[0];
+                //    }
+                //    else
+                //    {
+                //        BackColor = ColoresOscuro[0];
+                //        ForeColor = ColoresOscuro[1];
+                //    }
+                //}
+            }
+        }
+
+        /// <summary>
+        /// Asignar los colores según el tema indicado.
+        /// </summary>
+        /// <param name="elTema"></param>
+        private void AsignarTema(Temas elTema)
+        {
+            if (elTema == Temas.Claro)
+            {
+                if (_invertirColores)
                 {
-                    if (_invertirColores)
-                    {
-                        BackColor = ColoresClaro[1];
-                        ForeColor = ColoresClaro[0];
-                    }
-                    else
-                    {
-                        BackColor = ColoresClaro[0];
-                        ForeColor = ColoresClaro[1];
-                    }
+                    BackColor = ColoresClaro[1];
+                    ForeColor = ColoresClaro[0];
                 }
                 else
                 {
-                    if (_invertirColores)
-                    {
-                        BackColor = ColoresOscuro[1];
-                        ForeColor = ColoresOscuro[0];
-                    }
-                    else
-                    {
-                        BackColor = ColoresOscuro[0];
-                        ForeColor = ColoresOscuro[1];
-                    }
+                    BackColor = ColoresClaro[0];
+                    ForeColor = ColoresClaro[1];
+                }
+            }
+            else
+            {
+                if (_invertirColores)
+                {
+                    BackColor = ColoresOscuro[1];
+                    ForeColor = ColoresOscuro[0];
+                }
+                else
+                {
+                    BackColor = ColoresOscuro[0];
+                    ForeColor = ColoresOscuro[1];
                 }
             }
         }
@@ -773,7 +794,8 @@ namespace gsNotas
             {
                 _invertirColores = value;
                 MnuTemaInvertir.Checked = value;
-                Tema = _Tema;
+                //Tema = _Tema;
+                AsignarTema(_Tema);
             }
         }
 
@@ -2221,8 +2243,8 @@ No se guardan los grupos y notas en blanco.
 
         private void MnuTemas_DropDownOpening(object sender, EventArgs e)
         {
-            MnuTemaClaro.Checked = (Tema == Temas.Claro);
-            MnuTemaOscuro.Checked = (Tema == Temas.Oscuro);
+            MnuTemaClaro.Checked = Tema == Temas.Claro;
+            MnuTemaOscuro.Checked = Tema == Temas.Oscuro;
             MnuTemaColoresPredeterminados.Checked = ColoresPredeterminados;
         }
 
@@ -2403,7 +2425,8 @@ No se guardan los grupos y notas en blanco.
         {
             ColoresPredeterminados = !ColoresPredeterminados;
             // Forzar el cambio de color.
-            Tema = Tema;
+            //Tema = Tema;
+            AsignarTema(Tema);
             OnCambioDeTema(Tema);
         }
 
