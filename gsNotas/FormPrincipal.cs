@@ -293,32 +293,10 @@ namespace gsNotas
             notifyIcon1.Icon = this.Icon;
             notifyIcon1.Visible = true;
 
-            // Lo muevo al constructor del formulario. (29/oct/22 17.40)
-
-            //// Ajustar los settings para cuando cambie de versión. (28/oct/22 14.34)
-            //// El problema es que se usan los valores de la versión anterior. (29/oct/22 17.23)
-            //// Comprobar la versión por si se debe hacer el upgrade, (29/oct/22 17.35)
-            //// (se debe asignar ProductVersion con 3 valores ya que en realidad los settings se cambian al cambiar AssemblyVersion).
-            //object obj;
-            //try
-            //{
-            //    obj = MySettings.GetPreviousVersion("Version");
-            //}
-            //catch
-            //{
-            //    obj = null;
-            //}
-
-            //if (obj == null || obj.ToString() != Application.ProductVersion)
-            //{
-            //    MySettings.Upgrade();
-            //}
-            //MySettings.Version = Application.ProductVersion;
-            //MySettings.Save();
+            // La comprobación de actualizar los settings lo muevo al constructor del formulario. (29/oct/22 17.40)
 
             var grupoTmp = MySettings.UltimoGrupo;
 
-            //TabsConfigHeightNormal = tabsConfig.Height;
             HorizontalSize.Width = NotasFlowLayoutPanel.ClientSize.Width - 12;
 
             AsignarSettings();
@@ -1423,7 +1401,9 @@ No se guardan los grupos y notas en blanco.
         /// <summary>
         /// La posición y tamaño original de la ventana.
         /// </summary>
-        private (int Left, int Top, int Width, int Height) TamAppOriginal = (-2, -1, 823, 613);
+        private (int Left, int Top, int Width, int Height) TamAppOriginal = (0, 0, 1133, 1068);
+        // El valor para .NET 6: (0, 0, 1133, 1068) (29/oct/22 17.48)
+        // Este era el valor de la app para .NET Framework: (-2, -1, 823, 613)
 
         /// <summary>
         /// La posición y tamaño actual de la ventana.
