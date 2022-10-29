@@ -41,6 +41,7 @@ Cosillas que me gustaría añadir.
   - Mostrar las notas en una sola fila.
   - Cambiar el alto de los grupos y poder mostrarlos en una fila.
   - Cambiar los colores de los temas claro y oscuro (letra y fondo) en tiempo de ejecución (ahora se puede hacer en tiempo de diseño).
+    - Se guardan los colores de los temas en ColoresGrupos.json.
   - Añadir las notas (o las seleccionadas) a Keep de Google.
   - Ídem a Google Drive (las seleccionadas, no todas).
   - Cargar las notas de una de las copias/backup pero no usando importar (con formato NotaUC), si no, para reemplazar el contenido actual.
