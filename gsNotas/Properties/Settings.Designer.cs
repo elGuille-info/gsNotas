@@ -298,5 +298,17 @@ namespace gsNotas.Properties {
                 this["Version"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ColorPredeterminadoTema {
+            get {
+                return ((bool)(this["ColorPredeterminadoTema"]));
+            }
+            set {
+                this["ColorPredeterminadoTema"] = value;
+            }
+        }
     }
 }
