@@ -45,7 +45,7 @@ namespace gsNotas
         /// <summary>
         /// Acceso a los datos de configuración.
         /// </summary>
-        private Properties.Settings MySetting = Properties.Settings.Default;
+        private Properties.Settings MySettings = Properties.Settings.Default;
 
         /// <summary>
         /// Para controlar que no re-entre en un método de evento.
@@ -104,9 +104,30 @@ namespace gsNotas
             // Leer el contenido del fichero.
             Colores.Leer();
 
+            // Ajustar los settings para cuando cambie de versión. (28/oct/22 14.34)
+            // El problema es que al usar directamente Upgrade, se usan los valores de la versión anterior. (29/oct/22 17.23)
+            // Comprobar la versión por si se debe hacer el upgrade, (29/oct/22 17.35)
+            //  (se debe asignar ProductVersion con 3 valores ya que en realidad los settings se cambian al cambiar AssemblyVersion).
+            object obj;
+            try
+            {
+                obj = MySettings.GetPreviousVersion("Version");
+            }
+            catch
+            {
+                obj = null;
+            }
+
+            if (obj == null || obj.ToString() != Application.ProductVersion)
+            {
+                MySettings.Upgrade();
+            }
+            MySettings.Version = Application.ProductVersion;
+            MySettings.Save();
+
             // Poder indicar en configuración que se use aleatorio o el indicado.
-            ColorGrupo = MySetting.ColorGrupo;
-            OrdenColores = (WellPanel.OrderES)MySetting.OrdenColores;
+            ColorGrupo = MySettings.ColorGrupo;
+            OrdenColores = (WellPanel.OrderES)MySettings.OrdenColores;
             AsignarColoresGrupo();
 
             // Asignar los colores de los temas. (29/oct/22 16.16)
@@ -272,11 +293,30 @@ namespace gsNotas
             notifyIcon1.Icon = this.Icon;
             notifyIcon1.Visible = true;
 
-            // Ajustar los settings para cuando cambie de versión. (28/oct/22 14.34)
-            MySetting.Upgrade();
-            MySetting.Save();
+            // Lo muevo al constructor del formulario. (29/oct/22 17.40)
 
-            var grupoTmp = MySetting.UltimoGrupo;
+            //// Ajustar los settings para cuando cambie de versión. (28/oct/22 14.34)
+            //// El problema es que se usan los valores de la versión anterior. (29/oct/22 17.23)
+            //// Comprobar la versión por si se debe hacer el upgrade, (29/oct/22 17.35)
+            //// (se debe asignar ProductVersion con 3 valores ya que en realidad los settings se cambian al cambiar AssemblyVersion).
+            //object obj;
+            //try
+            //{
+            //    obj = MySettings.GetPreviousVersion("Version");
+            //}
+            //catch
+            //{
+            //    obj = null;
+            //}
+
+            //if (obj == null || obj.ToString() != Application.ProductVersion)
+            //{
+            //    MySettings.Upgrade();
+            //}
+            //MySettings.Version = Application.ProductVersion;
+            //MySettings.Save();
+
+            var grupoTmp = MySettings.UltimoGrupo;
 
             //TabsConfigHeightNormal = tabsConfig.Height;
             HorizontalSize.Width = NotasFlowLayoutPanel.ClientSize.Width - 12;
@@ -299,7 +339,7 @@ namespace gsNotas
 
             notaUC1.LeerNotas();
 
-            if (MySetting.MostrarMismoGrupo)
+            if (MySettings.MostrarMismoGrupo)
             {
                 if (notaUC1.Notas.ContainsKey(grupoTmp))
                 {
@@ -307,13 +347,13 @@ namespace gsNotas
                 }
             }
 
-            MySetting.UltimoGrupo = grupoTmp;
+            MySettings.UltimoGrupo = grupoTmp;
 
             //
             // Antes estaba en AsignarSettings                      (10/Feb/21)
             // 
 
-            if (MySetting.IniciarMinimizada)
+            if (MySettings.IniciarMinimizada)
             {
                 this.WindowState = FormWindowState.Minimized;
             }
@@ -359,7 +399,7 @@ namespace gsNotas
             }
             
             // Que el valor de MySetting.Tema siempre tenga Claro u Oscuro. (28/oct/22 13.46)
-            MySetting.Tema = notaUC1.Tema == (int)Temas.Claro ? "Claro" : "Oscuro";
+            MySettings.Tema = notaUC1.Tema == (int)Temas.Claro ? "Claro" : "Oscuro";
             //if (notaUC1.Tema == Temas.Claro || notaUC1.Tema == Temas.Light)
             //    MySetting.Tema = "Claro";
             //else
@@ -368,8 +408,8 @@ namespace gsNotas
             // No hace falta asignarlos, tienen los mismos valores
             if (this.WindowState == FormWindowState.Normal)
             {
-                MySetting.Left = this.Left;
-                MySetting.Top = this.Top;
+                MySettings.Left = this.Left;
+                MySettings.Top = this.Top;
 
                 // Da igual si está expandido o no, el tamaño es el mismo. (20/oct/22 11.59)
                 //if (!OcultarPanelExpanded)
@@ -377,20 +417,20 @@ namespace gsNotas
                 //    MySetting.Height = this.Height;
                 //    MySetting.Width = this.Width;
                 //}
-                MySetting.Height = this.Height;
-                MySetting.Width = this.Width;
+                MySettings.Height = this.Height;
+                MySettings.Width = this.Width;
             }
-            MySetting.SiempreEncima = notaUC1.SiempreEncima;
+            MySettings.SiempreEncima = notaUC1.SiempreEncima;
 
             // Guardar los colores. (21/oct/22 08.37)
             Colores.Guardar(Colores.ColoresGrupos);
-            MySetting.Save();
+            MySettings.Save();
 
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 // Solo minimizar si así se indica en MinimizarAlCerrar
                 // y no se está cerrando desde el menú cerrar.
-                if (NoCerrar && MySetting.MinimizarAlCerrar)
+                if (NoCerrar && MySettings.MinimizarAlCerrar)
                 {
                     // no cerrar, sólo minimizar
                     e.Cancel = true;
@@ -411,8 +451,8 @@ namespace gsNotas
             if (this.WindowState == FormWindowState.Normal)
             {
                 NotifyMenuRestaurar.Text = "Minimizar";
-                MySetting.Left = this.Left;
-                MySetting.Top = this.Top;
+                MySettings.Left = this.Left;
+                MySettings.Top = this.Top;
 
                 // Da igual si está expandido o no, el tamaño es el mismo. (20/oct/22 11.59)
                 //if (!OcultarPanelExpanded)
@@ -422,10 +462,10 @@ namespace gsNotas
 
                 //    TabsConfigHeightNormal = tabsConfig.Height;
                 //}
-                MySetting.Width = this.Width;
-                MySetting.Height = this.Height;
+                MySettings.Width = this.Width;
+                MySettings.Height = this.Height;
 
-                TamApp = (MySetting.Left, MySetting.Top, MySetting.Width, MySetting.Height);
+                TamApp = (MySettings.Left, MySettings.Top, MySettings.Width, MySettings.Height);
 
                 AsignarAnchors();
             }
@@ -443,8 +483,8 @@ namespace gsNotas
 
             if (WindowState == FormWindowState.Normal)
             {
-                MySetting.Left = this.Left;
-                MySetting.Top = this.Top;
+                MySettings.Left = this.Left;
+                MySettings.Top = this.Top;
                 TamApp.Left = this.Left;
                 TamApp.Top = this.Top;
             }
@@ -477,7 +517,7 @@ namespace gsNotas
             // mostrar la primera nota
             MostrarNotas(grupo, 0);
 
-            MySetting.UltimoGrupo = ElGrupo;
+            MySettings.UltimoGrupo = ElGrupo;
         }
 
         private void notaUC1_NotaCambiada(string nota, int index)
@@ -518,7 +558,7 @@ namespace gsNotas
                     
                     // Asignar el tamaño grande de la nota seleccionada
                     // lo dejo al doble de ancho cuando no se muestra horizontal
-                    if (MySetting.VistaNotasHorizontal)
+                    if (MySettings.VistaNotasHorizontal)
                     {
                         lbl.Width = NotasSize.Width;
                     }
@@ -833,16 +873,16 @@ namespace gsNotas
         /// </summary>
         private void AsignarColores()
         {
-            MySetting.InvertirColores = notaUC1.InvertirColores;
+            MySettings.InvertirColores = notaUC1.InvertirColores;
 
             // Asignar el tema. (19/oct/22 05.53)
             // Que el valor de MySetting.Tema siempre tenga Claro u Oscuro. (28/oct/22 13.46)
-            MySetting.Tema = notaUC1.Tema == (int)Temas.Claro ? "Claro" : "Oscuro";
+            MySettings.Tema = notaUC1.Tema == (int)Temas.Claro ? "Claro" : "Oscuro";
             //MySetting.Tema = notaUC1.Tema.ToString();
 
             this.BackColor = notaUC1.BackColor;
             this.ForeColor = notaUC1.ForeColor;
-            AsignarColores(tabsConfig, MySetting.InvertirColores);
+            AsignarColores(tabsConfig, MySettings.InvertirColores);
 
             // Esta forma de asignación múltiple de un valor me gusta :-)
             // Los colores invertidos de las etiquetas.
@@ -909,7 +949,7 @@ namespace gsNotas
         {
             OpcDeshacerCambios();
 
-            if (MySetting.VistaNotasHorizontal)
+            if (MySettings.VistaNotasHorizontal)
             {
                 HorizontalSize.Width = NotasFlowLayoutPanel.ClientSize.Width - 12;
                 NotasSize = HorizontalSize;
@@ -919,38 +959,38 @@ namespace gsNotas
                 NotasSize = NormalSize;
             }
 
-            NotasFlowLayoutPanel.WrapContents = MySetting.VistaNotasHorizontal;
+            NotasFlowLayoutPanel.WrapContents = MySettings.VistaNotasHorizontal;
 
-            OcultarPanelSuperior(MySetting.OcultarPanelSuperior);
+            OcultarPanelSuperior(MySettings.OcultarPanelSuperior);
 
-            IniciarConWindows = MySetting.IniciarConWindows;
+            IniciarConWindows = MySettings.IniciarConWindows;
 
             // los valores a asignar a NotaUC
-            notaUC1.Tema = MySetting.Tema == "Claro" ? Temas.Claro : Temas.Oscuro;
+            notaUC1.Tema = MySettings.Tema == "Claro" ? Temas.Claro : Temas.Oscuro;
             //if (MySetting.Tema == "Claro")
             //    notaUC1.Tema = Temas.Claro;
             //else
             //    notaUC1.Tema = Temas.Oscuro;
 
-            notaUC1.SiempreEncima = MySetting.SiempreEncima;
+            notaUC1.SiempreEncima = MySettings.SiempreEncima;
 
-            notaUC1.txtEdit.WordWrap = MySetting.AjusteLineas;
-            notaUC1.AutoGuardar = MySetting.Autoguardar;
+            notaUC1.txtEdit.WordWrap = MySettings.AjusteLineas;
+            notaUC1.AutoGuardar = MySettings.Autoguardar;
             notaUC1.NoGuardarEnBlanco = true; // MySetting.NoGuardarEnBlanco;
             notaUC1.GuardarEnDrive = false; // MySetting.GuardarEnDrive;
             notaUC1.BorrarNotasAnterioresDeDrive = false; // MySetting.BorrarNotasAnterioresDeDrive;
-            notaUC1.InvertirColores = MySetting.InvertirColores;
+            notaUC1.InvertirColores = MySettings.InvertirColores;
 
             TamApp = TamAppOriginal;
-            if (MySetting.RecordarTam)
+            if (MySettings.RecordarTam)
             {
                 // Si Left tiene un valor pequeño y solo hay una pantalla, ponerlo a cero.
-                if (MySetting.Left < 0 && Screen.AllScreens.Length < 2)
+                if (MySettings.Left < 0 && Screen.AllScreens.Length < 2)
                 {
-                    MySetting.Left = 0;
+                    MySettings.Left = 0;
                 }
 
-                TamApp = (MySetting.Left, MySetting.Top, MySetting.Width, MySetting.Height);
+                TamApp = (MySettings.Left, MySettings.Top, MySettings.Width, MySettings.Height);
             }
             AsignarTamañoVentana(TamApp);
 
@@ -1036,6 +1076,21 @@ namespace gsNotas
             if (OcultarPanelExpanded)
             {
                 OcultarPanelSuperior(false);
+            }
+
+            if (tabsConfig.SelectedTab.Name == "tabColores")
+            { 
+                if (notaUC1.Tema == Temas.Claro)
+                {
+                    ColorCboTemas.SelectedIndex = 0;
+                }
+                else
+                {
+                    ColorCboTemas.SelectedIndex = 1;
+                }
+                // Mostrar los colores de los grupos.
+                OpcCboColorGrupo_SelectedIndexChanged(null, null);
+                return;
             }
 
             if (tabsConfig.SelectedTab.Name == "tabOpciones")
@@ -1269,18 +1324,18 @@ No se guardan los grupos y notas en blanco.
             if (OpcConfigurando) return;
 
             // Asignar el valor del color del grupo a usar (los valores van de 0 a 4)
-            OpcCboColorGrupo.SelectedIndex = MySetting.ColorGrupo;
-            OrdenColores = (WellPanel.OrderES)MySetting.OrdenColores;
-            OpcChkAutoGuardar.Checked = MySetting.Autoguardar;
-            OpcChkRecordarTam.Checked = MySetting.RecordarTam;
-            OpcChkAjusteLineas.Checked = MySetting.AjusteLineas;
+            OpcCboColorGrupo.SelectedIndex = MySettings.ColorGrupo;
+            OrdenColores = (WellPanel.OrderES)MySettings.OrdenColores;
+            OpcChkAutoGuardar.Checked = MySettings.Autoguardar;
+            OpcChkRecordarTam.Checked = MySettings.RecordarTam;
+            OpcChkAjusteLineas.Checked = MySettings.AjusteLineas;
             //OpChkNoGuardarEnBlanco.Checked = MySetting.NoGuardarEnBlanco;
-            OpcChkIniciarMinimizada.Checked = MySetting.IniciarMinimizada;
-            OpcChkMinimizarAlCerrar.Checked = MySetting.MinimizarAlCerrar;
-            OpcChkMostrarMismoGrupo.Checked = MySetting.MostrarMismoGrupo;
-            OpcChkMostrarHorizontal.Checked = MySetting.VistaNotasHorizontal;
-            OpcChkOcultarPanelSuperior.Checked = MySetting.OcultarPanelSuperior;
-            OpcChkIniciarConWindows.Checked = MySetting.IniciarConWindows;
+            OpcChkIniciarMinimizada.Checked = MySettings.IniciarMinimizada;
+            OpcChkMinimizarAlCerrar.Checked = MySettings.MinimizarAlCerrar;
+            OpcChkMostrarMismoGrupo.Checked = MySettings.MostrarMismoGrupo;
+            OpcChkMostrarHorizontal.Checked = MySettings.VistaNotasHorizontal;
+            OpcChkOcultarPanelSuperior.Checked = MySettings.OcultarPanelSuperior;
+            OpcChkIniciarConWindows.Checked = MySettings.IniciarConWindows;
 
             OpcBtnDeshacer.Enabled = false;
         }
@@ -1293,29 +1348,29 @@ No se guardan los grupos y notas en blanco.
         {
             var modificado = false;
 
-            if (OpcChkAutoGuardar.Checked != MySetting.Autoguardar)
+            if (OpcChkAutoGuardar.Checked != MySettings.Autoguardar)
                 modificado = true;
-            else if (OpcChkRecordarTam.Checked != MySetting.RecordarTam)
+            else if (OpcChkRecordarTam.Checked != MySettings.RecordarTam)
                 modificado = true;
-            else if (OpcChkAjusteLineas.Checked != MySetting.AjusteLineas)
+            else if (OpcChkAjusteLineas.Checked != MySettings.AjusteLineas)
                 modificado = true;
             //else if (OpChkNoGuardarEnBlanco.Checked != MySetting.NoGuardarEnBlanco)
             //    modificado = true;
-            else if (OpcChkIniciarMinimizada.Checked != MySetting.IniciarMinimizada)
+            else if (OpcChkIniciarMinimizada.Checked != MySettings.IniciarMinimizada)
                 modificado = true;
-            else if (OpcChkMinimizarAlCerrar.Checked != MySetting.MinimizarAlCerrar)
+            else if (OpcChkMinimizarAlCerrar.Checked != MySettings.MinimizarAlCerrar)
                 modificado = true;
-            else if (OpcChkMostrarMismoGrupo.Checked != MySetting.MostrarMismoGrupo)
+            else if (OpcChkMostrarMismoGrupo.Checked != MySettings.MostrarMismoGrupo)
                 modificado = true;
-            else if (OpcChkMostrarHorizontal.Checked != MySetting.VistaNotasHorizontal)
+            else if (OpcChkMostrarHorizontal.Checked != MySettings.VistaNotasHorizontal)
                 modificado = true;
-            else if (OpcChkOcultarPanelSuperior.Checked != MySetting.OcultarPanelSuperior)
+            else if (OpcChkOcultarPanelSuperior.Checked != MySettings.OcultarPanelSuperior)
                 modificado = true;
-            else if (OpcChkIniciarConWindows.Checked != MySetting.IniciarConWindows)
+            else if (OpcChkIniciarConWindows.Checked != MySettings.IniciarConWindows)
                 modificado = true;
-            else if (OpcCboColorGrupo.SelectedIndex != MySetting.ColorGrupo)
+            else if (OpcCboColorGrupo.SelectedIndex != MySettings.ColorGrupo)
                 modificado = true;
-            else if (OrdenColores != (WellPanel.OrderES)MySetting.OrdenColores)
+            else if (OrdenColores != (WellPanel.OrderES)MySettings.OrdenColores)
                 modificado = true;
             //else if (OpcChkPermitirVariasInstancias.Checked != MySetting.PermitirVariasInstancias)
             //    modificado = true;
@@ -1379,31 +1434,31 @@ No se guardan los grupos y notas en blanco.
         {
             //MySetting.PermitirVariasInstancias = OpcChkPermitirVariasInstancias.Checked;
 
-            MySetting.ColorGrupo = OpcCboColorGrupo.SelectedIndex;
-            ColorGrupo = MySetting.ColorGrupo;
-            MySetting.Autoguardar = OpcChkAutoGuardar.Checked;
-            MySetting.RecordarTam = OpcChkRecordarTam.Checked;
-            MySetting.AjusteLineas = OpcChkAjusteLineas.Checked;
+            MySettings.ColorGrupo = OpcCboColorGrupo.SelectedIndex;
+            ColorGrupo = MySettings.ColorGrupo;
+            MySettings.Autoguardar = OpcChkAutoGuardar.Checked;
+            MySettings.RecordarTam = OpcChkRecordarTam.Checked;
+            MySettings.AjusteLineas = OpcChkAjusteLineas.Checked;
             //MySetting.NoGuardarEnBlanco = OpChkNoGuardarEnBlanco.Checked;
-            MySetting.IniciarMinimizada = OpcChkIniciarMinimizada.Checked;
-            MySetting.MinimizarAlCerrar = OpcChkMinimizarAlCerrar.Checked;
-            MySetting.MostrarMismoGrupo = OpcChkMostrarMismoGrupo.Checked;
-            var vistaAnt = MySetting.VistaNotasHorizontal;
-            MySetting.VistaNotasHorizontal = OpcChkMostrarHorizontal.Checked;
-            MySetting.OcultarPanelSuperior = OpcChkOcultarPanelSuperior.Checked;
-            MySetting.IniciarConWindows = OpcChkIniciarConWindows.Checked;
+            MySettings.IniciarMinimizada = OpcChkIniciarMinimizada.Checked;
+            MySettings.MinimizarAlCerrar = OpcChkMinimizarAlCerrar.Checked;
+            MySettings.MostrarMismoGrupo = OpcChkMostrarMismoGrupo.Checked;
+            var vistaAnt = MySettings.VistaNotasHorizontal;
+            MySettings.VistaNotasHorizontal = OpcChkMostrarHorizontal.Checked;
+            MySettings.OcultarPanelSuperior = OpcChkOcultarPanelSuperior.Checked;
+            MySettings.IniciarConWindows = OpcChkIniciarConWindows.Checked;
             //MySetting.GuardarEnDrive = OpcChkGuardarEnDrive.Checked;
             //MySetting.BorrarNotasAnterioresDeDrive = OpcChkBorrarNotasAnterioresDrive.Checked;
 
             // Guardar el último valor usado en el orden de los colores. (27/oct/22 14.53)
-            MySetting.OrdenColores = (int)OrdenColores;
+            MySettings.OrdenColores = (int)OrdenColores;
 
             OpcBtnDeshacer.Enabled = false;
 
             // Guardar los colores. (21/oct/22 08.37)
             //Colores.Guardar();
             Colores.Guardar(Colores.ColoresGrupos);
-            MySetting.Save();
+            MySettings.Save();
             OpcConfigurando = false;
 
             AsignarColoresGrupo();
@@ -1413,7 +1468,7 @@ No se guardan los grupos y notas en blanco.
 
             AsignarSettings();
 
-            if (vistaAnt != MySetting.VistaNotasHorizontal)
+            if (vistaAnt != MySettings.VistaNotasHorizontal)
                 AplicarVista();
 
             // Repintar los colores. (20/oct/22 16.28)
@@ -1526,7 +1581,7 @@ No se guardan los grupos y notas en blanco.
         {
             get
             {
-                return MySetting.IniciarConWindows;
+                return MySettings.IniciarConWindows;
             }
             set
             {
@@ -1537,7 +1592,7 @@ No se guardan los grupos y notas en blanco.
                 //    break;
                 //}
 
-                MySetting.IniciarConWindows = value;
+                MySettings.IniciarConWindows = value;
 
                 // Guardar la clave en el registro
                 // HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
@@ -1717,6 +1772,72 @@ No se guardan los grupos y notas en blanco.
             cboEdGrupoDestino.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnMoverNota.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cboEdNotas.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
+        }
+
+        // Cuando se cambia el tema en la configuración de los colores.
+        private void ColorCboTemas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (iniciando) return;
+
+            // El color del tema claro.
+            if (ColorCboTemas.SelectedIndex == 0)
+            {
+                lblColorFondo.BackColor = notaUC1.ColoresClaro[0];
+                lblColorTexto.BackColor = notaUC1.ColoresClaro[1];
+            }
+            else
+            {
+                lblColorFondo.BackColor = notaUC1.ColoresOscuro[0];
+                lblColorTexto.BackColor = notaUC1.ColoresOscuro[1];
+            }
+            lblColorFondo.ForeColor = lblColorTexto.BackColor;
+            lblColorTexto.ForeColor = lblColorFondo.BackColor;
+            txtColorTema.BackColor = lblColorFondo.BackColor;
+            txtColorTema.ForeColor = lblColorTexto.BackColor;
+        }
+
+        private void LblTema_Click(object sender, EventArgs e)
+        {
+            Label lbl = sender as Label;
+            if (lbl == null) return;
+            // Resaltar la etiqueta a la que se le cambia el color. (27/oct/22 14.56)
+            var bordeAnt = lbl.BorderStyle;
+            lbl.BorderStyle = BorderStyle.FixedSingle;
+            var heightAnt = lbl.Height;
+            lbl.Height = 36;
+
+            var frmColor = new FormSeleccionarColor();
+            frmColor.ElColor = lbl.BackColor;
+            frmColor.OrdenColores = OrdenColores;
+            if (frmColor.ShowDialog() == DialogResult.OK)
+            {
+                // Recordar el último valor usado. (27/oct/22 14.44)
+                OrdenColores = frmColor.OrdenColores;
+
+                lbl.BackColor = frmColor.ElColor;
+                //int grupo = (int)lbl.Tag;
+                //string grupoColor = $"Grupo-{grupo:00}";
+                //var colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
+                //int index = Convert.ToInt32(lbl.Text);
+                //string s = lbl.BackColor.ToArgb().ToString("x");
+                //colorsHex[index] = s;
+
+                //OpcDatosModificados();
+            }
+            // Reponer los valores que tenía antes.
+            lbl.BorderStyle = bordeAnt;
+            lbl.Height = heightAnt;
+
+            if (lbl == lblColorFondo)
+            {
+                lblColorTexto.ForeColor = lbl.BackColor;
+            }
+            else if (lbl == lblColorTexto)
+            {
+                lblColorFondo.ForeColor = lbl.BackColor;
+            }
+            txtColorTema.BackColor = lblColorFondo.BackColor;
+            txtColorTema.ForeColor = lblColorTexto.BackColor;
         }
     }
 }

@@ -87,6 +87,16 @@
             this.OpcChkRecordarTam = new System.Windows.Forms.CheckBox();
             this.OpChkNoGuardarEnBlanco = new System.Windows.Forms.CheckBox();
             this.OpcChkAutoGuardar = new System.Windows.Forms.CheckBox();
+            this.tabColores = new System.Windows.Forms.TabPage();
+            this.panelColores = new System.Windows.Forms.Panel();
+            this.panelTema = new System.Windows.Forms.Panel();
+            this.txtColorTema = new System.Windows.Forms.TextBox();
+            this.lblColorFondo = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblColorTexto = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.ColorCboTemas = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.tabAcercaDe = new System.Windows.Forms.TabPage();
             this.panelAcercaDe = new System.Windows.Forms.Panel();
             this.txtAcercaDe = new System.Windows.Forms.TextBox();
@@ -94,11 +104,11 @@
             this.picOcultarPanel1 = new System.Windows.Forms.PictureBox();
             this.timerInicio = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.contextNotify = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.NotifyMenuRestaurar = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.NotifyMenuCerrar = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.contextEditarNota = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuEditarEnVentanaSeparada = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
@@ -114,6 +124,9 @@
             this.panelBuscarTexto.SuspendLayout();
             this.tabOpciones.SuspendLayout();
             this.panelOpciones.SuspendLayout();
+            this.tabColores.SuspendLayout();
+            this.panelColores.SuspendLayout();
+            this.panelTema.SuspendLayout();
             this.tabAcercaDe.SuspendLayout();
             this.panelAcercaDe.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picOcultarPanel1)).BeginInit();
@@ -143,6 +156,7 @@
             this.tabsConfig.Controls.Add(this.tabEditarGrupos);
             this.tabsConfig.Controls.Add(this.tabBuscarTexto);
             this.tabsConfig.Controls.Add(this.tabOpciones);
+            this.tabsConfig.Controls.Add(this.tabColores);
             this.tabsConfig.Controls.Add(this.tabAcercaDe);
             this.tabsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabsConfig.Location = new System.Drawing.Point(3, 3);
@@ -803,6 +817,111 @@
             this.OpcChkAutoGuardar.UseVisualStyleBackColor = true;
             this.OpcChkAutoGuardar.CheckedChanged += new System.EventHandler(this.Opciones_CheckedChanged);
             // 
+            // tabColores
+            // 
+            this.tabColores.Controls.Add(this.panelColores);
+            this.tabColores.Location = new System.Drawing.Point(4, 34);
+            this.tabColores.Name = "tabColores";
+            this.tabColores.Padding = new System.Windows.Forms.Padding(3);
+            this.tabColores.Size = new System.Drawing.Size(1097, 360);
+            this.tabColores.TabIndex = 6;
+            this.tabColores.Text = "Colores";
+            this.tabColores.UseVisualStyleBackColor = true;
+            // 
+            // panelColores
+            // 
+            this.panelColores.Controls.Add(this.panelTema);
+            this.panelColores.Controls.Add(this.ColorCboTemas);
+            this.panelColores.Controls.Add(this.label2);
+            this.panelColores.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelColores.Location = new System.Drawing.Point(3, 3);
+            this.panelColores.Name = "panelColores";
+            this.panelColores.Size = new System.Drawing.Size(1091, 354);
+            this.panelColores.TabIndex = 0;
+            // 
+            // panelTema
+            // 
+            this.panelTema.Controls.Add(this.txtColorTema);
+            this.panelTema.Controls.Add(this.lblColorFondo);
+            this.panelTema.Controls.Add(this.label7);
+            this.panelTema.Controls.Add(this.lblColorTexto);
+            this.panelTema.Controls.Add(this.label5);
+            this.panelTema.Location = new System.Drawing.Point(9, 48);
+            this.panelTema.Name = "panelTema";
+            this.panelTema.Size = new System.Drawing.Size(403, 265);
+            this.panelTema.TabIndex = 2;
+            // 
+            // txtColorTema
+            // 
+            this.txtColorTema.Location = new System.Drawing.Point(6, 85);
+            this.txtColorTema.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
+            this.txtColorTema.Multiline = true;
+            this.txtColorTema.Name = "txtColorTema";
+            this.txtColorTema.Size = new System.Drawing.Size(391, 161);
+            this.txtColorTema.TabIndex = 5;
+            this.txtColorTema.Text = "Muestra del color del tema.\r\nLínea 2.\r\nLínea 3.";
+            // 
+            // lblColorFondo
+            // 
+            this.lblColorFondo.Location = new System.Drawing.Point(197, 47);
+            this.lblColorFondo.Margin = new System.Windows.Forms.Padding(6);
+            this.lblColorFondo.Name = "lblColorFondo";
+            this.lblColorFondo.Size = new System.Drawing.Size(200, 29);
+            this.lblColorFondo.TabIndex = 4;
+            this.lblColorFondo.Text = "Fondo";
+            this.lblColorFondo.Click += new System.EventHandler(this.LblTema_Click);
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(6, 47);
+            this.label7.Margin = new System.Windows.Forms.Padding(6);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(191, 29);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Fondo:";
+            // 
+            // lblColorTexto
+            // 
+            this.lblColorTexto.Location = new System.Drawing.Point(197, 6);
+            this.lblColorTexto.Margin = new System.Windows.Forms.Padding(6);
+            this.lblColorTexto.Name = "lblColorTexto";
+            this.lblColorTexto.Size = new System.Drawing.Size(200, 29);
+            this.lblColorTexto.TabIndex = 2;
+            this.lblColorTexto.Text = "Texto";
+            this.lblColorTexto.Click += new System.EventHandler(this.LblTema_Click);
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(6, 6);
+            this.label5.Margin = new System.Windows.Forms.Padding(6);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(191, 29);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Texto:";
+            // 
+            // ColorCboTemas
+            // 
+            this.ColorCboTemas.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ColorCboTemas.FormattingEnabled = true;
+            this.ColorCboTemas.Items.AddRange(new object[] {
+            "Claro",
+            "Oscuro"});
+            this.ColorCboTemas.Location = new System.Drawing.Point(206, 9);
+            this.ColorCboTemas.Name = "ColorCboTemas";
+            this.ColorCboTemas.Size = new System.Drawing.Size(206, 33);
+            this.ColorCboTemas.TabIndex = 1;
+            this.ColorCboTemas.SelectedIndexChanged += new System.EventHandler(this.ColorCboTemas_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(9, 12);
+            this.label2.Margin = new System.Windows.Forms.Padding(3);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(191, 29);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Tema:";
+            this.toolTip1.SetToolTip(this.label2, "Pulsa en un color para cambiarlo");
+            // 
             // tabAcercaDe
             // 
             this.tabAcercaDe.Controls.Add(this.panelAcercaDe);
@@ -981,6 +1100,10 @@
             this.tabOpciones.ResumeLayout(false);
             this.panelOpciones.ResumeLayout(false);
             this.panelOpciones.PerformLayout();
+            this.tabColores.ResumeLayout(false);
+            this.panelColores.ResumeLayout(false);
+            this.panelTema.ResumeLayout(false);
+            this.panelTema.PerformLayout();
             this.tabAcercaDe.ResumeLayout(false);
             this.panelAcercaDe.ResumeLayout(false);
             this.panelAcercaDe.PerformLayout();
@@ -1064,5 +1187,15 @@
         private System.Windows.Forms.Panel panelOpciones;
         private NotaUC notaUC1;
         private System.Windows.Forms.Label lblGrupoBuscar;
+        private System.Windows.Forms.TabPage tabColores;
+        private System.Windows.Forms.Panel panelColores;
+        private System.Windows.Forms.ComboBox ColorCboTemas;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panelTema;
+        private System.Windows.Forms.Label lblColorFondo;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblColorTexto;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtColorTema;
     }
 }
