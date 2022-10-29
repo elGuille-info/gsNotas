@@ -1393,11 +1393,14 @@ No se guardan los grupos y notas en blanco.
             if (vistaAnt != MySettings.VistaNotasHorizontal)
                 AplicarVista();
 
+            // Aplicar el color del tema. (ponerlo antes de repintar los colores del tema y de los colores).
+            AsignarColores();
+
+            // Repintar los colores del tema. (29/oct/22 22.52)
+            ColorCboTemas_SelectedIndexChanged(null, null);
+
             // Repintar los colores. (20/oct/22 16.28)
             OpcCboColorGrupo_SelectedIndexChanged(null, null);
-
-            // Aplicar el color del tema.
-            AsignarColores();
         }
 
         private void OpcBtnDeshacer_Click(object sender, EventArgs e)
