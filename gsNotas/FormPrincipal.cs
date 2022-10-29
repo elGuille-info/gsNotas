@@ -1057,7 +1057,12 @@ namespace gsNotas
             }
 
             if (tabsConfig.SelectedTab.Name == "tabColores")
-            { 
+            {
+                OpcConfigurando = true;
+                // Poner los botones de deshacer y guardar en este panel.
+                panelColores.Controls.Add(OpcBtnDeshacer);
+                panelColores.Controls.Add(OpcBtnGuardar);
+
                 if (notaUC1.Tema == Temas.Claro)
                 {
                     ColorCboTemas.SelectedIndex = 0;
@@ -1066,14 +1071,29 @@ namespace gsNotas
                 {
                     ColorCboTemas.SelectedIndex = 1;
                 }
+                // Mostrar los colores de los temas.
+                ColorCboTemas_SelectedIndexChanged(null, null);
+
                 // Mostrar los colores de los grupos.
                 OpcCboColorGrupo_SelectedIndexChanged(null, null);
+
+                OpcDeshacerCambios();
                 return;
             }
 
             if (tabsConfig.SelectedTab.Name == "tabOpciones")
             {
+                OpcConfigurando = true;
+                // Poner los botones de deshacer y guardar en este panel.
+                panelOpciones.Controls.Add(OpcBtnDeshacer);
+                panelOpciones.Controls.Add(OpcBtnGuardar);
+
+                // Mostrar los colores de los temas (aunque no se vean).
+                ColorCboTemas_SelectedIndexChanged(null, null);
+
+                // Mostrar los colores de los grupos (aunque no se vean).
                 OpcCboColorGrupo_SelectedIndexChanged(null, null);
+
                 OpcDeshacerCambios();
                 return;
             }
@@ -1288,8 +1308,63 @@ No se guardan los grupos y notas en blanco.
         }
 
         //
-        // Para las opciones de configuración.
+        // Para las opciones de configuración (opciones y colores).
         //
+
+        private void OpcBtnGuardar_Click(object sender, EventArgs e)
+        {
+            MySettings.ColorGrupo = OpcCboColorGrupo.SelectedIndex;
+            ColorGrupo = MySettings.ColorGrupo;
+            MySettings.Autoguardar = OpcChkAutoGuardar.Checked;
+            MySettings.RecordarTam = OpcChkRecordarTam.Checked;
+            MySettings.AjusteLineas = OpcChkAjusteLineas.Checked;
+            // Esta opción siempre será true (para no guardar notas en blanco).
+            MySettings.NoGuardarEnBlanco = true;
+            //MySettings.NoGuardarEnBlanco = OpChkNoGuardarEnBlanco.Checked;
+            MySettings.IniciarMinimizada = OpcChkIniciarMinimizada.Checked;
+            MySettings.MinimizarAlCerrar = OpcChkMinimizarAlCerrar.Checked;
+            MySettings.MostrarMismoGrupo = OpcChkMostrarMismoGrupo.Checked;
+            var vistaAnt = MySettings.VistaNotasHorizontal;
+            MySettings.VistaNotasHorizontal = OpcChkMostrarHorizontal.Checked;
+            MySettings.OcultarPanelSuperior = OpcChkOcultarPanelSuperior.Checked;
+            MySettings.IniciarConWindows = OpcChkIniciarConWindows.Checked;
+            //MySettings.GuardarEnDrive = OpcChkGuardarEnDrive.Checked;
+            //MySettings.BorrarNotasAnterioresDeDrive = OpcChkBorrarNotasAnterioresDrive.Checked;
+
+            notaUC1.ColoresPredeterminados = ColorChkColoresPredeterminados.Checked;
+
+            // Guardar el último valor usado en el orden de los colores. (27/oct/22 14.53)
+            MySettings.OrdenColores = (int)OrdenColores;
+
+            // Asignar los colores de los temas. O mejor, si se cambia aplicarlos directamente.
+
+            OpcBtnDeshacer.Enabled = false;
+
+            // Guardar los colores. (21/oct/22 08.37)
+            //Colores.Guardar();
+            Colores.Guardar(Colores.ColoresGrupos);
+            MySettings.Save();
+            OpcConfigurando = false;
+
+            AsignarColoresGrupo();
+            AsignarColores();
+            // Colorear también los grupos.
+            MostrarGrupos(ElGrupo, ElGrupoIndex);
+
+            AsignarSettings();
+
+            if (vistaAnt != MySettings.VistaNotasHorizontal)
+                AplicarVista();
+
+            // Repintar los colores. (20/oct/22 16.28)
+            OpcCboColorGrupo_SelectedIndexChanged(null, null);
+        }
+
+        private void OpcBtnDeshacer_Click(object sender, EventArgs e)
+        {
+            OpcConfigurando = false;
+            OpcDeshacerCambios();
+        }
 
         private bool OpcConfigurando = false;
 
@@ -1307,6 +1382,8 @@ No se guardan los grupos y notas en blanco.
             OpcChkAutoGuardar.Checked = MySettings.Autoguardar;
             OpcChkRecordarTam.Checked = MySettings.RecordarTam;
             OpcChkAjusteLineas.Checked = MySettings.AjusteLineas;
+            // Este valor siempre será true (para no guardar notas en blanco).
+            OpChkNoGuardarEnBlanco.Checked = true;
             //OpChkNoGuardarEnBlanco.Checked = MySetting.NoGuardarEnBlanco;
             OpcChkIniciarMinimizada.Checked = MySettings.IniciarMinimizada;
             OpcChkMinimizarAlCerrar.Checked = MySettings.MinimizarAlCerrar;
@@ -1314,6 +1391,11 @@ No se guardan los grupos y notas en blanco.
             OpcChkMostrarHorizontal.Checked = MySettings.VistaNotasHorizontal;
             OpcChkOcultarPanelSuperior.Checked = MySettings.OcultarPanelSuperior;
             OpcChkIniciarConWindows.Checked = MySettings.IniciarConWindows;
+
+            // Los colores de los temas.
+            ColorChkColoresPredeterminados.Checked = notaUC1.ColoresPredeterminados;
+            ColorCboTemas.SelectedIndex = (int)notaUC1.Tema;
+            ColorCboTemas_SelectedIndexChanged(null, null);
 
             OpcBtnDeshacer.Enabled = false;
         }
@@ -1350,15 +1432,225 @@ No se guardan los grupos y notas en blanco.
                 modificado = true;
             else if (OrdenColores != (WellPanel.OrderES)MySettings.OrdenColores)
                 modificado = true;
-            //else if (OpcChkPermitirVariasInstancias.Checked != MySetting.PermitirVariasInstancias)
+
+            // No tener en cuenta el tema seleccionado al cambiar los colores de los temas,
+            // solo tener en cuenta los propios colores.
+            //else if (ColorCboTemas.SelectedIndex != (int)notaUC1.Tema)
             //    modificado = true;
 
+            if (ColorChkColoresPredeterminados.Checked != notaUC1.ColoresPredeterminados)
+                modificado = true;
+
+            // Por si se han cambiado los colores.
+            // Solo si no se usan los predeterminados. (29/oct/22 19.58)
+            if (ColorChkColoresPredeterminados.Checked == false) 
+            {
+                if (ColorCboTemas.SelectedIndex == 0)
+                {
+                    if (lblColorFondo.BackColor != notaUC1.ColoresClaro[0])
+                        modificado = true;
+                    else if (lblColorTexto.BackColor != notaUC1.ColoresClaro[1])
+                        modificado = true;
+                }
+                else
+                {
+                    if (lblColorFondo.BackColor != notaUC1.ColoresOscuro[0])
+                        modificado = true;
+                    if (lblColorTexto.BackColor != notaUC1.ColoresOscuro[1])
+                        modificado = true;
+                }
+            }
+
+            // Estos valores no se guardan en la configuración.
             //else if (OpcChkGuardarEnDrive.Checked != MySetting.GuardarEnDrive)
             //    modificado = true;
             //else if (OpcChkBorrarNotasAnterioresDrive.Checked != MySetting.BorrarNotasAnterioresDeDrive)
             //    modificado = true;
 
             OpcBtnDeshacer.Enabled = modificado;
+        }
+
+        // Mostrar los colores de las etiquetas según el grupo seleccionado. (18/oct/22 21.30)
+
+        private void OpcCboColorGrupo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (iniciando) return;
+
+            flowLayoutPanel1.Controls.Clear();
+
+            if (OpcCboColorGrupo.SelectedIndex < 0)
+                OpcCboColorGrupo.SelectedIndex = 0;
+
+            // Por si hay más grupos que los colores predeterminados.
+            var colores = ElColorGrupo(OpcCboColorGrupo.SelectedIndex, notaUC1.Notas.Keys.Count);
+
+            // Solo mostrar los colores con los grupos que hay actualmente
+            for (int i = 0; i < colores.Count; i++)
+            {
+                var col = colores[i];
+                var lbl = new Label();
+                lbl.Margin = new Padding(0, 0, 3, 3);
+                // El valor predeterminado de Width es 100.
+                lbl.Width = 40;
+                // El valor predeterminado de Height es 23.
+                lbl.Height = 26;
+                // Resaltar el grupo actual.
+                if (i == ElGrupoIndex)
+                {
+                    lbl.Height = 36;
+                    //lbl.BorderStyle = BorderStyle.FixedSingle;
+                    lbl.BorderStyle = BorderStyle.Fixed3D;
+                    lbl.Font = new Font(lbl.Font, FontStyle.Bold);
+                }
+                lbl.Text = i.ToString();
+                lbl.BackColor = col;
+                SetBackColor(lbl, col);
+                // Poder cambiar el color. (25/oct/22 16.54)
+                lbl.Click += Lbl_Click;
+                lbl.Tag = OpcCboColorGrupo.SelectedIndex;
+                flowLayoutPanel1.Controls.Add(lbl);
+            }
+
+            OpcDatosModificados();
+        }
+
+        // Para el orden de colores a mostrar. (27/oct/22 14.43)
+        private WellPanel.OrderES OrdenColores = WellPanel.OrderES.Brillo;
+
+        private void Lbl_Click(object sender, EventArgs e)
+        {
+            Label lbl = sender as Label;
+            if (lbl == null) return;
+            // Resaltar la etiqueta a la que se le cambia el color. (27/oct/22 14.56)
+            var bordeAnt = lbl.BorderStyle;
+            //lbl.BorderStyle= BorderStyle.Fixed3D;
+            lbl.BorderStyle = BorderStyle.FixedSingle;
+            var heightAnt = lbl.Height;
+            lbl.Height = 36;
+
+            var frmColor = new FormSeleccionarColor();
+            frmColor.ElColor = lbl.BackColor;
+            frmColor.OrdenColores = OrdenColores;
+            if (frmColor.ShowDialog() == DialogResult.OK)
+            {
+                // Recordar el último valor usado. (27/oct/22 14.44)
+                OrdenColores = frmColor.OrdenColores;
+
+                lbl.BackColor = frmColor.ElColor;
+                int grupo = (int)lbl.Tag;
+                string grupoColor = $"Grupo-{grupo:00}";
+                var colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
+                int index = Convert.ToInt32(lbl.Text);
+                string s = lbl.BackColor.ToArgb().ToString("x");
+                colorsHex[index] = s;
+
+                OpcDatosModificados();
+            }
+            // Reponer los valores que tenía antes.
+            lbl.BorderStyle = bordeAnt;
+            lbl.Height = heightAnt;
+        }
+
+        private void ColorChkColoresPredeterminados_CheckedChanged(object sender, EventArgs e)
+        {
+            ColorCboTemas.Enabled = !ColorChkColoresPredeterminados.Checked;
+            if (ColorChkColoresPredeterminados.Checked)
+            {
+                lblTema.Font = new Font(lblTema.Font, FontStyle.Italic);
+            }
+            else
+            {
+                lblTema.Font = new Font(lblTema.Font, FontStyle.Regular);
+            }
+            ColorCboTemas_SelectedIndexChanged(null, null);
+
+            OpcDatosModificados();
+        }
+
+        // Cuando se cambia el tema en la configuración de los colores.
+
+        private void ColorCboTemas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (iniciando) return;
+
+            // El color del tema claro.
+            if (ColorCboTemas.SelectedIndex == 0)
+            {
+                // Si se usan los colores predeterminados.
+                if (ColorChkColoresPredeterminados.Checked)
+                {
+                    lblColorFondo.BackColor = NotaUC.ColoresClaroPredeterminado[0];
+                    lblColorTexto.BackColor = NotaUC.ColoresClaroPredeterminado[1];
+                }
+                else
+                {
+                    lblColorFondo.BackColor = notaUC1.ColoresClaro[0];
+                    lblColorTexto.BackColor = notaUC1.ColoresClaro[1];
+                }
+            }
+            else
+            {
+                // Si se usan los colores predeterminados.
+                if (ColorChkColoresPredeterminados.Checked)
+                {
+                    lblColorFondo.BackColor = NotaUC.ColoresOscuroPredeterminado[0];
+                    lblColorTexto.BackColor = NotaUC.ColoresOscuroPredeterminado[1];
+                }
+                else
+                {
+                    lblColorFondo.BackColor = notaUC1.ColoresOscuro[0];
+                    lblColorTexto.BackColor = notaUC1.ColoresOscuro[1];
+                }
+            }
+
+            lblColorFondo.ForeColor = lblColorTexto.BackColor;
+            lblColorTexto.ForeColor = lblColorFondo.BackColor;
+            txtColorTema.BackColor = lblColorFondo.BackColor;
+            txtColorTema.ForeColor = lblColorTexto.BackColor;
+        }
+
+        // Cambiar el color del tema seleccionado.
+
+        private void LblTema_Click(object sender, EventArgs e)
+        {
+            // Nada que hacer si se usan los colores predeterminados. (29/oct/22 20.05)
+            if (ColorChkColoresPredeterminados.Checked)
+                return;
+
+            Label lbl = sender as Label;
+            if (lbl == null) return;
+            // Resaltar la etiqueta a la que se le cambia el color. (27/oct/22 14.56)
+            var bordeAnt = lbl.BorderStyle;
+            lbl.BorderStyle = BorderStyle.FixedSingle;
+            var heightAnt = lbl.Height;
+            lbl.Height = 36;
+
+            var frmColor = new FormSeleccionarColor();
+            frmColor.ElColor = lbl.BackColor;
+            frmColor.OrdenColores = OrdenColores;
+            if (frmColor.ShowDialog() == DialogResult.OK)
+            {
+                // Recordar el último valor usado. (27/oct/22 14.44)
+                OrdenColores = frmColor.OrdenColores;
+
+                lbl.BackColor = frmColor.ElColor;
+
+                if (lbl == lblColorFondo)
+                {
+                    lblColorTexto.ForeColor = lbl.BackColor;
+                }
+                else if (lbl == lblColorTexto)
+                {
+                    lblColorFondo.ForeColor = lbl.BackColor;
+                }
+                txtColorTema.BackColor = lblColorFondo.BackColor;
+                txtColorTema.ForeColor = lblColorTexto.BackColor;
+
+                OpcDatosModificados();
+            }
+            // Reponer los valores que tenía antes.
+            lbl.BorderStyle = bordeAnt;
+            lbl.Height = heightAnt;
         }
 
         private void OpcBtnRestablecerTam_Click(object sender, EventArgs e)
@@ -1410,64 +1702,13 @@ No se guardan los grupos y notas en blanco.
         /// </summary>
         private (int Left, int Top, int Width, int Height) TamApp;
 
-        private void OpcBtnGuardar_Click(object sender, EventArgs e)
-        {
-            //MySetting.PermitirVariasInstancias = OpcChkPermitirVariasInstancias.Checked;
-
-            MySettings.ColorGrupo = OpcCboColorGrupo.SelectedIndex;
-            ColorGrupo = MySettings.ColorGrupo;
-            MySettings.Autoguardar = OpcChkAutoGuardar.Checked;
-            MySettings.RecordarTam = OpcChkRecordarTam.Checked;
-            MySettings.AjusteLineas = OpcChkAjusteLineas.Checked;
-            //MySetting.NoGuardarEnBlanco = OpChkNoGuardarEnBlanco.Checked;
-            MySettings.IniciarMinimizada = OpcChkIniciarMinimizada.Checked;
-            MySettings.MinimizarAlCerrar = OpcChkMinimizarAlCerrar.Checked;
-            MySettings.MostrarMismoGrupo = OpcChkMostrarMismoGrupo.Checked;
-            var vistaAnt = MySettings.VistaNotasHorizontal;
-            MySettings.VistaNotasHorizontal = OpcChkMostrarHorizontal.Checked;
-            MySettings.OcultarPanelSuperior = OpcChkOcultarPanelSuperior.Checked;
-            MySettings.IniciarConWindows = OpcChkIniciarConWindows.Checked;
-            //MySetting.GuardarEnDrive = OpcChkGuardarEnDrive.Checked;
-            //MySetting.BorrarNotasAnterioresDeDrive = OpcChkBorrarNotasAnterioresDrive.Checked;
-
-            // Guardar el último valor usado en el orden de los colores. (27/oct/22 14.53)
-            MySettings.OrdenColores = (int)OrdenColores;
-
-            OpcBtnDeshacer.Enabled = false;
-
-            // Guardar los colores. (21/oct/22 08.37)
-            //Colores.Guardar();
-            Colores.Guardar(Colores.ColoresGrupos);
-            MySettings.Save();
-            OpcConfigurando = false;
-
-            AsignarColoresGrupo();
-            AsignarColores();
-            // Colorear también los grupos.
-            MostrarGrupos(ElGrupo, ElGrupoIndex);
-
-            AsignarSettings();
-
-            if (vistaAnt != MySettings.VistaNotasHorizontal)
-                AplicarVista();
-
-            // Repintar los colores. (20/oct/22 16.28)
-            OpcCboColorGrupo_SelectedIndexChanged(null, null);
-        }
-
-        private void OpcBtnDeshacer_Click(object sender, EventArgs e)
-        {
-            OpcConfigurando = false;
-            OpcDeshacerCambios();
-        }
-
         private void Opciones_CheckedChanged(object sender, EventArgs e)
         {
             if (iniciando) return;
 
-            OpcConfigurando = true;
+            //OpcConfigurando = true;
             // Esta opción siempre debe ser TRUE
-            OpChkNoGuardarEnBlanco.Checked = true;
+            //OpChkNoGuardarEnBlanco.Checked = true;
             OpcDatosModificados();
         }
 
@@ -1646,87 +1887,6 @@ No se guardan los grupos y notas en blanco.
             colores.Add(col2);
         }
 
-        // Mostrar los colores de las etiquetas según el grupo seleccionado. (18/oct/22 21.30)
-        private void OpcCboColorGrupo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (iniciando) return;
-
-            flowLayoutPanel1.Controls.Clear();
-
-            if (OpcCboColorGrupo.SelectedIndex < 0)
-                OpcCboColorGrupo.SelectedIndex = 0;
-
-            // Por si hay más grupos que los colores predeterminados.
-            var colores = ElColorGrupo(OpcCboColorGrupo.SelectedIndex, notaUC1.Notas.Keys.Count);
-
-            // Solo mostrar los colores con los grupos que hay actualmente
-            //for (int i = 0; i < notaUC1.Notas.Keys.Count; i++)
-            for (int i = 0; i < colores.Count; i++)
-            {
-                var col = colores[i];
-                var lbl = new Label();
-                lbl.Margin = new Padding(0, 0, 3, 3);
-                // El valor predeterminado de Width es 100.
-                lbl.Width = 40;
-                // El valor predeterminado de Height es 23.
-                lbl.Height = 26;
-                // Resaltar el grupo actual.
-                if (i == ElGrupoIndex)
-                {
-                    lbl.Height = 36;
-                    //lbl.BorderStyle = BorderStyle.FixedSingle;
-                    lbl.BorderStyle = BorderStyle.Fixed3D;
-                    lbl.Font = new Font(lbl.Font, FontStyle.Bold);
-                }
-                lbl.Text = i.ToString();
-                lbl.BackColor = col;
-                SetBackColor(lbl, col);
-                // Poder cambiar el color. (25/oct/22 16.54)
-                lbl.Click += Lbl_Click;
-                lbl.Tag = OpcCboColorGrupo.SelectedIndex;
-                flowLayoutPanel1.Controls.Add(lbl);
-            }
-
-            OpcDatosModificados();
-        }
-
-        // Para el orden de colores a mostrar. (27/oct/22 14.43)
-        private WellPanel.OrderES OrdenColores = WellPanel.OrderES.Brillo;
-
-        private void Lbl_Click(object sender, EventArgs e)
-        {
-            Label lbl = sender as Label;
-            if (lbl == null) return;
-            // Resaltar la etiqueta a la que se le cambia el color. (27/oct/22 14.56)
-            var bordeAnt = lbl.BorderStyle;
-            //lbl.BorderStyle= BorderStyle.Fixed3D;
-            lbl.BorderStyle = BorderStyle.FixedSingle;
-            var heightAnt = lbl.Height;
-            lbl.Height = 36;
-
-            var frmColor = new FormSeleccionarColor();
-            frmColor.ElColor = lbl.BackColor;
-            frmColor.OrdenColores = OrdenColores;
-            if (frmColor.ShowDialog() == DialogResult.OK)
-            {
-                // Recordar el último valor usado. (27/oct/22 14.44)
-                OrdenColores = frmColor.OrdenColores;
-
-                lbl.BackColor = frmColor.ElColor;
-                int grupo = (int)lbl.Tag;
-                string grupoColor = $"Grupo-{grupo:00}";
-                var colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
-                int index = Convert.ToInt32(lbl.Text);
-                string s = lbl.BackColor.ToArgb().ToString("x");
-                colorsHex[index] = s;
-
-                OpcDatosModificados();
-            }
-            // Reponer los valores que tenía antes.
-            lbl.BorderStyle = bordeAnt;
-            lbl.Height = heightAnt;
-        }
-
         /// <summary>
         /// Asignar los anchors de los controles de las opciones, porque no siempre lo hace correctamente (al menos con .NET Framework).
         /// </summary>
@@ -1752,72 +1912,6 @@ No se guardan los grupos y notas en blanco.
             cboEdGrupoDestino.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnMoverNota.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cboEdNotas.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
-        }
-
-        // Cuando se cambia el tema en la configuración de los colores.
-        private void ColorCboTemas_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (iniciando) return;
-
-            // El color del tema claro.
-            if (ColorCboTemas.SelectedIndex == 0)
-            {
-                lblColorFondo.BackColor = notaUC1.ColoresClaro[0];
-                lblColorTexto.BackColor = notaUC1.ColoresClaro[1];
-            }
-            else
-            {
-                lblColorFondo.BackColor = notaUC1.ColoresOscuro[0];
-                lblColorTexto.BackColor = notaUC1.ColoresOscuro[1];
-            }
-            lblColorFondo.ForeColor = lblColorTexto.BackColor;
-            lblColorTexto.ForeColor = lblColorFondo.BackColor;
-            txtColorTema.BackColor = lblColorFondo.BackColor;
-            txtColorTema.ForeColor = lblColorTexto.BackColor;
-        }
-
-        private void LblTema_Click(object sender, EventArgs e)
-        {
-            Label lbl = sender as Label;
-            if (lbl == null) return;
-            // Resaltar la etiqueta a la que se le cambia el color. (27/oct/22 14.56)
-            var bordeAnt = lbl.BorderStyle;
-            lbl.BorderStyle = BorderStyle.FixedSingle;
-            var heightAnt = lbl.Height;
-            lbl.Height = 36;
-
-            var frmColor = new FormSeleccionarColor();
-            frmColor.ElColor = lbl.BackColor;
-            frmColor.OrdenColores = OrdenColores;
-            if (frmColor.ShowDialog() == DialogResult.OK)
-            {
-                // Recordar el último valor usado. (27/oct/22 14.44)
-                OrdenColores = frmColor.OrdenColores;
-
-                lbl.BackColor = frmColor.ElColor;
-                //int grupo = (int)lbl.Tag;
-                //string grupoColor = $"Grupo-{grupo:00}";
-                //var colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
-                //int index = Convert.ToInt32(lbl.Text);
-                //string s = lbl.BackColor.ToArgb().ToString("x");
-                //colorsHex[index] = s;
-
-                //OpcDatosModificados();
-            }
-            // Reponer los valores que tenía antes.
-            lbl.BorderStyle = bordeAnt;
-            lbl.Height = heightAnt;
-
-            if (lbl == lblColorFondo)
-            {
-                lblColorTexto.ForeColor = lbl.BackColor;
-            }
-            else if (lbl == lblColorTexto)
-            {
-                lblColorFondo.ForeColor = lbl.BackColor;
-            }
-            txtColorTema.BackColor = lblColorFondo.BackColor;
-            txtColorTema.ForeColor = lblColorTexto.BackColor;
         }
     }
 }

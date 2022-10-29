@@ -69,9 +69,6 @@
             this.lblBuscar = new System.Windows.Forms.Label();
             this.tabOpciones = new System.Windows.Forms.TabPage();
             this.panelOpciones = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.OpcCboColorGrupo = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.OpcChkIniciarConWindows = new System.Windows.Forms.CheckBox();
             this.OpcBtnGuardarEnDrive = new System.Windows.Forms.Button();
             this.OpcLinkSolicitarAutorización = new System.Windows.Forms.LinkLabel();
@@ -89,6 +86,10 @@
             this.OpcChkAutoGuardar = new System.Windows.Forms.CheckBox();
             this.tabColores = new System.Windows.Forms.TabPage();
             this.panelColores = new System.Windows.Forms.Panel();
+            this.ColorChkColoresPredeterminados = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.OpcCboColorGrupo = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.panelTema = new System.Windows.Forms.Panel();
             this.txtColorTema = new System.Windows.Forms.TextBox();
             this.lblColorFondo = new System.Windows.Forms.Label();
@@ -96,7 +97,7 @@
             this.lblColorTexto = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.ColorCboTemas = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblTema = new System.Windows.Forms.Label();
             this.tabAcercaDe = new System.Windows.Forms.TabPage();
             this.panelAcercaDe = new System.Windows.Forms.Panel();
             this.txtAcercaDe = new System.Windows.Forms.TextBox();
@@ -578,9 +579,6 @@
             // 
             this.panelOpciones.AutoScroll = true;
             this.panelOpciones.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panelOpciones.Controls.Add(this.flowLayoutPanel1);
-            this.panelOpciones.Controls.Add(this.OpcCboColorGrupo);
-            this.panelOpciones.Controls.Add(this.label4);
             this.panelOpciones.Controls.Add(this.OpcChkIniciarConWindows);
             this.panelOpciones.Controls.Add(this.OpcBtnGuardarEnDrive);
             this.panelOpciones.Controls.Add(this.OpcLinkSolicitarAutorización);
@@ -603,41 +601,6 @@
             this.panelOpciones.Padding = new System.Windows.Forms.Padding(3);
             this.panelOpciones.Size = new System.Drawing.Size(1091, 354);
             this.panelOpciones.TabIndex = 0;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(597, 224);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(479, 124);
-            this.flowLayoutPanel1.TabIndex = 15;
-            this.toolTip1.SetToolTip(this.flowLayoutPanel1, "Pulsa en un color para cambiarlo");
-            // 
-            // OpcCboColorGrupo
-            // 
-            this.OpcCboColorGrupo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.OpcCboColorGrupo.FormattingEnabled = true;
-            this.OpcCboColorGrupo.Items.AddRange(new object[] {
-            "Aleatorio",
-            "Colores 1",
-            "Colores 2",
-            "Colores 3",
-            "Colores 4"});
-            this.OpcCboColorGrupo.Location = new System.Drawing.Point(794, 185);
-            this.OpcCboColorGrupo.Name = "OpcCboColorGrupo";
-            this.OpcCboColorGrupo.Size = new System.Drawing.Size(206, 33);
-            this.OpcCboColorGrupo.TabIndex = 14;
-            this.OpcCboColorGrupo.SelectedIndexChanged += new System.EventHandler(this.OpcCboColorGrupo_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(597, 189);
-            this.label4.Margin = new System.Windows.Forms.Padding(3);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(191, 29);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Colores grupo:";
-            this.toolTip1.SetToolTip(this.label4, "Pulsa en un color para cambiarlo");
             // 
             // OpcChkIniciarConWindows
             // 
@@ -830,14 +793,64 @@
             // 
             // panelColores
             // 
+            this.panelColores.Controls.Add(this.ColorChkColoresPredeterminados);
+            this.panelColores.Controls.Add(this.flowLayoutPanel1);
+            this.panelColores.Controls.Add(this.OpcCboColorGrupo);
+            this.panelColores.Controls.Add(this.label4);
             this.panelColores.Controls.Add(this.panelTema);
             this.panelColores.Controls.Add(this.ColorCboTemas);
-            this.panelColores.Controls.Add(this.label2);
+            this.panelColores.Controls.Add(this.lblTema);
             this.panelColores.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelColores.Location = new System.Drawing.Point(3, 3);
             this.panelColores.Name = "panelColores";
             this.panelColores.Size = new System.Drawing.Size(1091, 354);
             this.panelColores.TabIndex = 0;
+            // 
+            // ColorChkColoresPredeterminados
+            // 
+            this.ColorChkColoresPredeterminados.AutoSize = true;
+            this.ColorChkColoresPredeterminados.Location = new System.Drawing.Point(9, 319);
+            this.ColorChkColoresPredeterminados.Name = "ColorChkColoresPredeterminados";
+            this.ColorChkColoresPredeterminados.Size = new System.Drawing.Size(276, 29);
+            this.ColorChkColoresPredeterminados.TabIndex = 3;
+            this.ColorChkColoresPredeterminados.Text = "Usar colores predeterminados";
+            this.ColorChkColoresPredeterminados.UseVisualStyleBackColor = true;
+            this.ColorChkColoresPredeterminados.CheckedChanged += new System.EventHandler(this.ColorChkColoresPredeterminados_CheckedChanged);
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(433, 133);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(410, 180);
+            this.flowLayoutPanel1.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.flowLayoutPanel1, "Pulsa en un color para cambiarlo");
+            // 
+            // OpcCboColorGrupo
+            // 
+            this.OpcCboColorGrupo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.OpcCboColorGrupo.FormattingEnabled = true;
+            this.OpcCboColorGrupo.Items.AddRange(new object[] {
+            "Aleatorio",
+            "Colores 1",
+            "Colores 2",
+            "Colores 3",
+            "Colores 4"});
+            this.OpcCboColorGrupo.Location = new System.Drawing.Point(630, 91);
+            this.OpcCboColorGrupo.Name = "OpcCboColorGrupo";
+            this.OpcCboColorGrupo.Size = new System.Drawing.Size(186, 33);
+            this.OpcCboColorGrupo.TabIndex = 5;
+            this.OpcCboColorGrupo.SelectedIndexChanged += new System.EventHandler(this.OpcCboColorGrupo_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(433, 95);
+            this.label4.Margin = new System.Windows.Forms.Padding(3);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(191, 29);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "Colores grupo:";
+            this.toolTip1.SetToolTip(this.label4, "Pulsa en un color para cambiarlo");
             // 
             // panelTema
             // 
@@ -854,11 +867,11 @@
             // txtColorTema
             // 
             this.txtColorTema.Location = new System.Drawing.Point(6, 85);
-            this.txtColorTema.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
+            this.txtColorTema.Margin = new System.Windows.Forms.Padding(3, 3, 3, 12);
             this.txtColorTema.Multiline = true;
             this.txtColorTema.Name = "txtColorTema";
-            this.txtColorTema.Size = new System.Drawing.Size(391, 161);
-            this.txtColorTema.TabIndex = 5;
+            this.txtColorTema.Size = new System.Drawing.Size(391, 168);
+            this.txtColorTema.TabIndex = 4;
             this.txtColorTema.Text = "Muestra del color del tema.\r\nLínea 2.\r\nLínea 3.";
             // 
             // lblColorFondo
@@ -867,8 +880,9 @@
             this.lblColorFondo.Margin = new System.Windows.Forms.Padding(6);
             this.lblColorFondo.Name = "lblColorFondo";
             this.lblColorFondo.Size = new System.Drawing.Size(200, 29);
-            this.lblColorFondo.TabIndex = 4;
+            this.lblColorFondo.TabIndex = 3;
             this.lblColorFondo.Text = "Fondo";
+            this.toolTip1.SetToolTip(this.lblColorFondo, "Pulsa en el color del fondo para cambiarlo");
             this.lblColorFondo.Click += new System.EventHandler(this.LblTema_Click);
             // 
             // label7
@@ -877,7 +891,7 @@
             this.label7.Margin = new System.Windows.Forms.Padding(6);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(191, 29);
-            this.label7.TabIndex = 3;
+            this.label7.TabIndex = 2;
             this.label7.Text = "Fondo:";
             // 
             // lblColorTexto
@@ -886,8 +900,9 @@
             this.lblColorTexto.Margin = new System.Windows.Forms.Padding(6);
             this.lblColorTexto.Name = "lblColorTexto";
             this.lblColorTexto.Size = new System.Drawing.Size(200, 29);
-            this.lblColorTexto.TabIndex = 2;
+            this.lblColorTexto.TabIndex = 1;
             this.lblColorTexto.Text = "Texto";
+            this.toolTip1.SetToolTip(this.lblColorTexto, "Pulsa en el color del texto para cambiarlo");
             this.lblColorTexto.Click += new System.EventHandler(this.LblTema_Click);
             // 
             // label5
@@ -896,7 +911,7 @@
             this.label5.Margin = new System.Windows.Forms.Padding(6);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(191, 29);
-            this.label5.TabIndex = 1;
+            this.label5.TabIndex = 0;
             this.label5.Text = "Texto:";
             // 
             // ColorCboTemas
@@ -912,15 +927,15 @@
             this.ColorCboTemas.TabIndex = 1;
             this.ColorCboTemas.SelectedIndexChanged += new System.EventHandler(this.ColorCboTemas_SelectedIndexChanged);
             // 
-            // label2
+            // lblTema
             // 
-            this.label2.Location = new System.Drawing.Point(9, 12);
-            this.label2.Margin = new System.Windows.Forms.Padding(3);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(191, 29);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Tema:";
-            this.toolTip1.SetToolTip(this.label2, "Pulsa en un color para cambiarlo");
+            this.lblTema.Location = new System.Drawing.Point(9, 12);
+            this.lblTema.Margin = new System.Windows.Forms.Padding(3);
+            this.lblTema.Name = "lblTema";
+            this.lblTema.Size = new System.Drawing.Size(191, 29);
+            this.lblTema.TabIndex = 0;
+            this.lblTema.Text = "Tema:";
+            this.toolTip1.SetToolTip(this.lblTema, "Pulsa en el color del texto o del fondo para cambiarlo");
             // 
             // tabAcercaDe
             // 
@@ -1102,6 +1117,7 @@
             this.panelOpciones.PerformLayout();
             this.tabColores.ResumeLayout(false);
             this.panelColores.ResumeLayout(false);
+            this.panelColores.PerformLayout();
             this.panelTema.ResumeLayout(false);
             this.panelTema.PerformLayout();
             this.tabAcercaDe.ResumeLayout(false);
@@ -1173,9 +1189,6 @@
         private System.Windows.Forms.CheckBox OpcChkMostrarHorizontal;
         private System.Windows.Forms.CheckBox OpcChkMinimizarAlCerrar;
         private System.Windows.Forms.CheckBox OpcChkIniciarConWindows;
-        private System.Windows.Forms.ComboBox OpcCboColorGrupo;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label LblNota;
         private System.Windows.Forms.Label LblGrupo;
         private System.Windows.Forms.CheckBox OpcChkIniciarMinimizada;
@@ -1190,12 +1203,16 @@
         private System.Windows.Forms.TabPage tabColores;
         private System.Windows.Forms.Panel panelColores;
         private System.Windows.Forms.ComboBox ColorCboTemas;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblTema;
         private System.Windows.Forms.Panel panelTema;
         private System.Windows.Forms.Label lblColorFondo;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label lblColorTexto;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtColorTema;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.ComboBox OpcCboColorGrupo;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox ColorChkColoresPredeterminados;
     }
 }
