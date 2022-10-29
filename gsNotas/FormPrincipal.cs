@@ -108,6 +108,51 @@ namespace gsNotas
             ColorGrupo = MySetting.ColorGrupo;
             OrdenColores = (WellPanel.OrderES)MySetting.OrdenColores;
             AsignarColoresGrupo();
+
+            // Asignar los colores de los temas. (29/oct/22 16.16)
+            AsignarColoresTemas();
+        }
+
+        private void AsignarColoresTemas()
+        {
+            bool hayQueGuardar = false;
+
+            // Los colores del tema claro.
+            string grupoColor = "Tema-Claro";
+            if (Colores.ColoresGrupos.LosColores.ContainsKey(grupoColor))
+            {
+                var colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
+                var colores = Colores.ColoresFromHex(colorsHex).ToArray();
+                notaUC1.ColoresClaro = colores;
+            }
+            else
+            {
+                // Si no existe en la colección, añadir los predeterminados.
+                var colorsHex = Colores.ColoresToHex(NotaUC.ColoresClaroPredeterminado.ToList());
+                Colores.ColoresGrupos.LosColores.Add(grupoColor, colorsHex);
+                hayQueGuardar = true;
+            }
+
+            // Los colores del tema oscuro.
+            grupoColor = "Tema-Oscuro";
+            if (Colores.ColoresGrupos.LosColores.ContainsKey(grupoColor))
+            {
+                var colorsHex = Colores.ColoresGrupos.LosColores[grupoColor];
+                var colores = Colores.ColoresFromHex(colorsHex).ToArray();
+                notaUC1.ColoresOscuro = colores;
+            }
+            else
+            {
+                // Si no existe en la colección, añadir los predeterminados.
+                var colorsHex = Colores.ColoresToHex(NotaUC.ColoresOscuroPredeterminado.ToList());
+                Colores.ColoresGrupos.LosColores.Add(grupoColor, colorsHex);
+                hayQueGuardar = true;
+            }
+            // Guardar los colores si se han asignado.
+            if (hayQueGuardar)
+            {
+                Colores.Guardar();
+            }
         }
 
         /// <summary>
@@ -131,8 +176,8 @@ namespace gsNotas
         /// <summary>
         /// Devuelve el color del grupo con un número mínimo de colores.
         /// </summary>
-        /// <param name="elColorGrupo"></param>
-        /// <param name="cuantosColores"></param>
+        /// <param name="elColorGrupo">El grupo de colores a asignar.</param>
+        /// <param name="cuantosColores">Valor predeterminado 15 (para 16 colores).</param>
         private List<Color> ElColorGrupo(int elColorGrupo, int cuantosColores = 15)
         {
             List<Color> colores = null;

@@ -653,8 +653,9 @@ namespace gsNotas
         }
 
         // Los colores predeterminados de los temas. (28/oct/22 12.43)
-        private readonly static Color[] ColoresOscuroPredeterminado = new Color[] { Color.FromArgb(30, 30, 30), Color.FromArgb(87, 166, 58) };
-        private readonly static Color[] ColoresClaroPredeterminado = new Color[] { Color.White, Color.FromArgb(0, 99, 177) };
+        // Lo hago público para usarlo al cargar el formulario principal y asignar los colores predeterminados. (29/oct/22 16.08)
+        public readonly static Color[] ColoresOscuroPredeterminado = new Color[] { Color.FromArgb(30, 30, 30), Color.FromArgb(87, 166, 58) };
+        public readonly static Color[] ColoresClaroPredeterminado = new Color[] { Color.White, Color.FromArgb(0, 99, 177) };
 
         private bool _ColoresPredeterminados = true;
 

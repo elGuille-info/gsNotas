@@ -117,7 +117,7 @@ namespace gsNotas
                 //string s = losColores[i].ToArgb().ToString("x");
                 //list.Add(s);
 
-                list.Add(ColorToHex(losColores[i]);
+                list.Add(ColorToHex(losColores[i]));
             }
             return list;
         }
