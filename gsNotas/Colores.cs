@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------------
+﻿//--------------------------------------------------------------/---------------
 //
 // Colores                                                          (21/oct/22)
 // Clase para manejar los colores usados en gsNotas.
@@ -52,15 +52,35 @@ namespace gsNotas
             List<Color> list = new List<Color>();
             for (int i=0; i < losColores.Count; i++)
             {
-                int alpha = Convert.ToInt32(losColores[i].Substring(0, 2), 16);
-                int r = Convert.ToInt32(losColores[i].Substring(2, 2), 16);
-                int g = Convert.ToInt32(losColores[i].Substring(4, 2), 16);
-                int b = Convert.ToInt32(losColores[i].Substring(6, 2), 16);
-                Color col = Color.FromArgb(alpha, r, g, b);
-                list.Add(col);
+                //int alpha = Convert.ToInt32(losColores[i].Substring(0, 2), 16);
+                //int r = Convert.ToInt32(losColores[i].Substring(2, 2), 16);
+                //int g = Convert.ToInt32(losColores[i].Substring(4, 2), 16);
+                //int b = Convert.ToInt32(losColores[i].Substring(6, 2), 16);
+                //Color col = Color.FromArgb(alpha, r, g, b);
+                //list.Add(col);
+                
+                list.Add(ColorFromHex(losColores[i]));
             }
 
             return list;
+        }
+
+        // Convertir un color en formato hexadecimal en color. (29/oct/22 15.15)
+
+        /// <summary>
+        /// Convierte una cadena en formato hexadecimal (AARRGGBB) en color.
+        /// </summary>
+        /// <param name="elColor">La cadena del color en formato hexadecimal AARRGGBB.</param>
+        /// <returns>El color resultante.</returns>
+        public static Color ColorFromHex(string elColor)
+        {
+            int alpha = Convert.ToInt32(elColor.Substring(0, 2), 16);
+            int r = Convert.ToInt32(elColor.Substring(2, 2), 16);
+            int g = Convert.ToInt32(elColor.Substring(4, 2), 16);
+            int b = Convert.ToInt32(elColor.Substring(6, 2), 16);
+            Color col = Color.FromArgb(alpha, r, g, b);
+
+            return col;
         }
 
         /// <summary>
@@ -73,10 +93,24 @@ namespace gsNotas
             List<string> list = new List<string>();
             for (int i = 0; i < losColores.Count; i++)
             {
-                string s = losColores[i].ToArgb().ToString("x");
-                list.Add(s);
+                //string s = losColores[i].ToArgb().ToString("x");
+                //list.Add(s);
+
+                list.Add(ColorToHex(losColores[i]);
             }
             return list;
+        }
+
+        // Convertir un color al formato hexadecimal. (29/oct/22 15.20)
+
+        /// <summary>
+        /// Convierte un color en formato hexadecimal (AARRGGBB).
+        /// </summary>
+        /// <param name="elColor">El color a convertir en cadena hexadecimal.</param>
+        /// <returns>El color en formato hexadecimal resultante.</returns>
+        public static string ColorToHex(Color elColor)
+        {
+            return elColor.ToArgb().ToString("x");
         }
 
         // El directorio de configuración en documentos.

@@ -15,13 +15,13 @@
       <Title>gsNotas</Title>
       <Authors>elGuille</Authors>
       <Company>elGuille</Company>
-      <Description>Gestionar notas y grupos de notas con editor integrado.  Para .NET 6 (revisión del 28-oct-2022)</Description>
+      <Description>Gestionar notas y grupos de notas con editor integrado.  Para .NET 6 (revisión del 29-oct-2022)</Description>
       <Copyright>© Guillermo Som (elGuille), 2020-2022</Copyright>
       <RepositoryType>git</RepositoryType>
       <NeutralLanguage>es</NeutralLanguage>
       <Version>2.0</Version>
       <AssemblyVersion>2.0.1.0</AssemblyVersion>
-      <FileVersion>2.0.1.1</FileVersion>
+      <FileVersion>2.0.1.2</FileVersion>
       <ApplicationIcon>gsNotasNET.Android.ico</ApplicationIcon>
   </PropertyGroup>
 
