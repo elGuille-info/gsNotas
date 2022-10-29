@@ -127,9 +127,6 @@ namespace gsNotas
 
             notaUC1.ColoresPredeterminados = MySettings.ColorPredeterminadoTema;
 
-            ColoresClaroCopia = notaUC1.ColoresClaro;
-            ColoresOscuroCopia = notaUC1.ColoresOscuro;
-
             // Poder indicar en configuración que se use aleatorio o el indicado.
             ColorGrupo = MySettings.ColorGrupo;
             OrdenColores = (WellPanel.OrderES)MySettings.OrdenColores;
@@ -137,6 +134,12 @@ namespace gsNotas
 
             // Asignar los colores de los temas. (29/oct/22 16.16)
             AsignarColoresTemas();
+
+            // Asignar los colores de copia y configuración después de leer los colores guardados. (29/oct/22 22.45)
+            ColoresClaroCopia = notaUC1.ColoresClaro;
+            ColoresOscuroCopia = notaUC1.ColoresOscuro;
+            ColoresClaroConfig = ColoresClaroCopia;
+            ColoresOscuroConfig = ColoresOscuroCopia;
         }
 
         private void AsignarColoresTemas()
@@ -179,6 +182,8 @@ namespace gsNotas
             {
                 Colores.Guardar();
             }
+
+            notaUC1.AsignarTema(notaUC1.Tema);
         }
 
         /// <summary>
@@ -867,6 +872,8 @@ namespace gsNotas
             this.ForeColor = notaUC1.ForeColor;
             AsignarColores(tabsConfig, MySettings.InvertirColores);
 
+            notaUC1.AsignarTema(notaUC1.Tema);
+
             // Esta forma de asignación múltiple de un valor me gusta :-)
             // Los colores invertidos de las etiquetas.
             lblEdInfo.BackColor = lblResultadoBuscar.BackColor = lblBuscando.BackColor = btnBuscar.BackColor = btnClasificarGrupos.BackColor = btnBorrar.BackColor = btnCambiarNombre.BackColor = btnMoverNota.BackColor = notaUC1.ForeColor;
@@ -1340,6 +1347,7 @@ No se guardan los grupos y notas en blanco.
             //MySettings.BorrarNotasAnterioresDeDrive = OpcChkBorrarNotasAnterioresDrive.Checked;
 
             notaUC1.ColoresPredeterminados = ColorChkColoresPredeterminados.Checked;
+            MySettings.ColorPredeterminadoTema = notaUC1.ColoresPredeterminados;
 
             // Guardar el último valor usado en el orden de los colores. (27/oct/22 14.53)
             MySettings.OrdenColores = (int)OrdenColores;
@@ -1349,6 +1357,23 @@ No se guardan los grupos y notas en blanco.
             notaUC1.ColoresOscuro = ColoresOscuroConfig;
             ColoresClaroCopia = ColoresClaroConfig;
             ColoresOscuroCopia = ColoresOscuroConfig;
+
+            // Guardar los colores de los temas en el fichero de colores.
+            string grupoColor = "Tema-Claro";
+            var colorsHex = Colores.ColoresToHex(notaUC1.ColoresClaro.ToList());
+            if (Colores.ColoresGrupos.LosColores.ContainsKey(grupoColor))
+            {
+                Colores.ColoresGrupos.LosColores.Remove(grupoColor);
+            }
+            Colores.ColoresGrupos.LosColores.Add(grupoColor, colorsHex);
+            
+            grupoColor = "Tema-Oscuro";
+            colorsHex = Colores.ColoresToHex(notaUC1.ColoresOscuro.ToList());
+            if (Colores.ColoresGrupos.LosColores.ContainsKey(grupoColor))
+            {
+                Colores.ColoresGrupos.LosColores.Remove(grupoColor);
+            }
+            Colores.ColoresGrupos.LosColores.Add(grupoColor, colorsHex);
 
             OpcBtnDeshacer.Enabled = false;
 
@@ -1409,8 +1434,6 @@ No se guardan los grupos y notas en blanco.
 
             // Los colores de los temas.
             ColorChkColoresPredeterminados.Checked = notaUC1.ColoresPredeterminados;
-            //ColoresClarosCopia = notaUC1.ColoresClaro;
-            //ColoresOscurosCopia = notaUC1.ColoresOscuro;
             ColoresClaroConfig = ColoresClaroCopia;
             ColoresOscuroConfig = ColoresOscuroCopia;
 
@@ -1426,6 +1449,8 @@ No se guardan los grupos y notas en blanco.
         /// <returns>True si se han modificado las opciones.</returns>
         private void OpcDatosModificados()
         {
+            if (!OpcConfigurando) return;
+
             var modificado = false;
 
             if (OpcChkAutoGuardar.Checked != MySettings.Autoguardar)
@@ -1473,7 +1498,7 @@ No se guardan los grupos y notas en blanco.
                     //    modificado = true;
                     if (ColoresClaroConfig[0] != ColoresClaroCopia[0])
                         modificado = true;
-                    else if (ColoresClaroConfig[0] != ColoresClaroCopia[1])
+                    else if (ColoresClaroConfig[1] != ColoresClaroCopia[1])
                         modificado = true;
                 }
                 else
@@ -1607,15 +1632,9 @@ No se guardan los grupos y notas en blanco.
                 // Si se usan los colores predeterminados.
                 if (ColorChkColoresPredeterminados.Checked)
                 {
-                    //lblColorFondo.BackColor = NotaUC.ColoresClaroPredeterminado[0];
-                    //lblColorTexto.BackColor = NotaUC.ColoresClaroPredeterminado[1];
                     ColoresClaroConfig = NotaUC.ColoresClaroPredeterminado;
+                    ColoresClaroCopia = ColoresClaroConfig;
                 }
-                //else
-                //{
-                //    lblColorFondo.BackColor = ColoresClaroConfig[0];
-                //    lblColorTexto.BackColor = ColoresClaroConfig[1];
-                //}
                 lblColorFondo.BackColor = ColoresClaroConfig[0];
                 lblColorTexto.BackColor = ColoresClaroConfig[1];
             }
@@ -1624,15 +1643,9 @@ No se guardan los grupos y notas en blanco.
                 // Si se usan los colores predeterminados.
                 if (ColorChkColoresPredeterminados.Checked)
                 {
-                    //lblColorFondo.BackColor = NotaUC.ColoresOscuroPredeterminado[0];
-                    //lblColorTexto.BackColor = NotaUC.ColoresOscuroPredeterminado[1];
                     ColoresOscuroConfig = NotaUC.ColoresOscuroPredeterminado;
+                    ColoresOscuroCopia = ColoresOscuroConfig;
                 }
-                //else
-                //{
-                //    lblColorFondo.BackColor = ColoresOscuroConfig[0];
-                //    lblColorTexto.BackColor = ColoresOscuroConfig[1];
-                //}
                 lblColorFondo.BackColor = ColoresOscuroConfig[0];
                 lblColorTexto.BackColor = ColoresOscuroConfig[1];
             }

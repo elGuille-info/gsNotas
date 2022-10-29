@@ -751,7 +751,7 @@ namespace gsNotas
         /// Asignar los colores según el tema indicado.
         /// </summary>
         /// <param name="elTema"></param>
-        private void AsignarTema(Temas elTema)
+        public void AsignarTema(Temas elTema)
         {
             if (elTema == Temas.Claro)
             {
