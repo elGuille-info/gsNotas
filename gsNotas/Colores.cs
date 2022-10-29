@@ -72,12 +72,33 @@ namespace gsNotas
         /// </summary>
         /// <param name="elColor">La cadena del color en formato hexadecimal AARRGGBB.</param>
         /// <returns>El color resultante.</returns>
+        /// <remarks>Permite el formato con [#][AA]RRGGBB</remarks>
         public static Color ColorFromHex(string elColor)
         {
-            int alpha = Convert.ToInt32(elColor.Substring(0, 2), 16);
-            int r = Convert.ToInt32(elColor.Substring(2, 2), 16);
-            int g = Convert.ToInt32(elColor.Substring(4, 2), 16);
-            int b = Convert.ToInt32(elColor.Substring(6, 2), 16);
+            // Tener en cuenta la longitud de la cadena. (29/oct/22 15.34)
+            //  De forma que se permita sin el valor Alpha (AA)
+            int alpha = 255;
+            int pos = 0;
+
+            // Si empieza con # convertir a partir de la siguiente posición.
+            if (elColor.StartsWith("#"))
+            {
+                //pos = 1;
+                elColor = elColor.Substring(1);
+            }
+            // Si la longitud es 8, es que se incluye el canal alpha (luminosidad).
+            if (elColor.Length == 8)
+            {
+                alpha = Convert.ToInt32(elColor.Substring(pos, 2), 16);
+            }
+            else
+            {
+                pos = -2;
+            }
+            //alpha = Convert.ToInt32(elColor.Substring(pos, 2), 16);
+            int r = Convert.ToInt32(elColor.Substring(pos + 2, 2), 16);
+            int g = Convert.ToInt32(elColor.Substring(pos + 4, 2), 16);
+            int b = Convert.ToInt32(elColor.Substring(pos + 6, 2), 16);
             Color col = Color.FromArgb(alpha, r, g, b);
 
             return col;
