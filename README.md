@@ -9,6 +9,12 @@ Gestionar notas y grupos de notas con editor integrado.
 
 <br>
 
+**Nota del 30-oct-22:**
+
+> He publicado en el blog [una página para esta utilidad](https://www.elguillemola.com/utilidades-net/gsnotas-para-net-6-y-superior/), aunque seguramente aquí estará más actualizada que en el blog.
+
+<br>
+
 **Novedades en el diseño de la aplicación y directorios de datos:**
 
 - Los datos de la configuración y de las notas así como las copias de las notas, se guardan en la carpeta ***gsNotas*** dentro de ***%LOCALAPPDATA%*** (C:\\[Usuario]\AppData\Local\gsNotas).
@@ -46,6 +52,8 @@ Cosillas que me gustaría añadir.
   - Cambiar el tamaño de los paneles (arrastrando el panel del editor o un splitter entre ambos paneles).
   - Poder elegir un color personalizado.
     - Por ahora solo se pueden elegir los colores definidos por el sistema.
+    - Estoy pensando usar el selector de colores del sistema en lugar de la aplicación que ahora utilizo. 🤔
+  - Poder usar las notas desde el fichero de texto o base de datos (con las de gsNotasNET para Android y UWP/WinUI).
   
 ## Hechas del TODO
 
