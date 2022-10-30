@@ -1661,11 +1661,19 @@ No se guardan los grupos y notas en blanco.
                 // El formato es en BGR
                 // Añadir los colores personalizados de los temas.
                 // Poner como primer color personalizado el que se modifica.
-                CustomColors = new int[]{
+                CustomColors = new int[]
+                {
                     ColorTranslator.ToOle(lbl.BackColor),
+                    ColorTranslator.ToOle(Color.White),
                     ColorTranslator.ToOle(Color.FromArgb(0, 99, 177)),
                     ColorTranslator.ToOle(Color.FromArgb(30, 30, 30)),
-                    ColorTranslator.ToOle(Color.FromArgb(87, 166, 58))},
+                    ColorTranslator.ToOle(Color.FromArgb(87, 166, 58)),
+                    ColorTranslator.ToOle(ColorTranslator.FromHtml("#2196F3")),
+                    ColorTranslator.ToOle(ColorTranslator.FromHtml("#96d1ff")),
+                    //ColorTranslator.ToOle(ColorTranslator.FromHtml("#0077df")),
+                    //ColorTranslator.ToOle(ColorTranslator.FromHtml("#003391")),
+                    //ColorTranslator.ToOle(ColorTranslator.FromHtml("#4A5C8C")),
+                },
 
                 Color = lbl.BackColor
             };
