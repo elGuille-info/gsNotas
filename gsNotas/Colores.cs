@@ -28,19 +28,73 @@ namespace gsNotas
 {
     public class Colores
     {
-        // Las propiedades a serializar deben tener el atributo JsonPropertyName con el nombre a usar en el fichero .json
-        // Si alguna propiedad no se quiere serizalizar, usar el atributo JsonIgnore.
+        //
+        // Funciones de apoyo y de uso general.
+        //
 
-        // Guardar los colores en formato hexadecimal, (25/oct/22)
-        // ya que la serialiación parece que no funciona con los colores directamente.
+        //
+        // Estos métodos estaban en el formulario principal.
+        //
+
+        // Crear una copia de los colores para que sean independientes. (30/oct/22 14.01)
+
+        public static Color[] CopiarColores(Color[] losColores)
+        {
+            List<Color> colorList = new List<Color>();
+            foreach (var c in losColores)
+            {
+                colorList.Add(c);
+            }
+            return colorList.ToArray();
+        }
 
         /// <summary>
-        /// Diccionario para los colores almacenados en formato hexadecimal: AARRGGBB. 
+        /// Crear un color de forma aleatoria.
         /// </summary>
-        /// <remarks>La clave será el número del grupo de colores y el valor los colores asignados a ese grupo.</remarks>
-        [JsonPropertyName("colores")]
-        public Dictionary<string, List<string>> LosColores { get; set; } = new();
-        //public Dictionary<string, List<Color>> LosColores { get; set; } = new();
+        /// <param name="red">Si no se indica o se indica el valor cero, se asignará un valor aleatorio para el rojo.</param>
+        /// <param name="green">Si no se indica o se indica el valor cero, se asignará un valor aleatorio para el verde.</param>
+        /// <param name="blue">Si no se indica o se indica el valor cero, se asignará un valor aleatorio para el azul.</param>
+        public static Color GetRandomColor(byte red = 0, byte green = 0, byte blue = 0)
+        {
+            Random random = new Random((int)DateTime.Now.Ticks);
+            byte r = red == 0 ? (byte)random.Next(0, 255) : red;
+            byte g = green == 0 ? (byte)random.Next(0, 255) : green;
+            byte b = blue == 0 ? (byte)random.Next(0, 255) : blue;
+            if (random.Next(0, 2) == 0)
+                return Color.FromArgb(255, r, g, b);
+            else
+                return Color.FromArgb(255, b, r, g);
+        }
+
+        /// <summary>
+        /// Asignar el BackColor al control indicado y un ForeColor según la luminosidad.
+        /// </summary>
+        /// <param name="ctrl">El control al que asignar el BackColor y el ForeColor.</param>
+        /// <param name="col">El Color a asignar.</param>
+        public static void SetBackColor(Control ctrl, Color col)
+        {
+            ctrl.BackColor = col;
+            ctrl.ForeColor = (col.GetBrightness() < 0.6) ? Color.White : Color.Black;
+        }
+
+        /// <summary>
+        /// Añade un nuevo color aleatorio a la colección indicada.
+        /// </summary>
+        /// <param name="colores">Colección con los colores que hay para no repetir.</param>
+        public static void AñadirNuevoColor(List<Color> colores)
+        {
+            Color col2;
+            do
+            {
+                col2 = Colores.GetRandomColor();
+            } while (colores.Contains(col2));
+
+            colores.Add(col2);
+        }
+
+        //
+        // Estos métodos se usan en la clase para serializar los colores.
+        //
 
         /// <summary>
         /// Convierte una colección de colores en formato hexadecimal en el equivalente del color.
@@ -50,7 +104,7 @@ namespace gsNotas
         public static List<Color> ColoresFromHex(List<string> losColores)
         {
             List<Color> list = new List<Color>();
-            for (int i=0; i < losColores.Count; i++)
+            for (int i = 0; i < losColores.Count; i++)
             {
                 //int alpha = Convert.ToInt32(losColores[i].Substring(0, 2), 16);
                 //int r = Convert.ToInt32(losColores[i].Substring(2, 2), 16);
@@ -58,7 +112,7 @@ namespace gsNotas
                 //int b = Convert.ToInt32(losColores[i].Substring(6, 2), 16);
                 //Color col = Color.FromArgb(alpha, r, g, b);
                 //list.Add(col);
-                
+
                 list.Add(ColorFromHex(losColores[i]));
             }
 
@@ -133,6 +187,29 @@ namespace gsNotas
         {
             return elColor.ToArgb().ToString("x");
         }
+
+        //
+        // </Funciones de apoyo y de uso general.
+        //
+
+
+        //
+        // Métodos y demás para serializar los colores de los grupos.
+        //
+
+        // Las propiedades a serializar deben tener el atributo JsonPropertyName con el nombre a usar en el fichero .json
+        // Si alguna propiedad no se quiere serizalizar, usar el atributo JsonIgnore.
+
+        // Guardar los colores en formato hexadecimal, (25/oct/22)
+        // ya que la serialiación parece que no funciona con los colores directamente.
+
+        /// <summary>
+        /// Diccionario para los colores almacenados en formato hexadecimal: AARRGGBB. 
+        /// </summary>
+        /// <remarks>La clave será el número del grupo de colores y el valor los colores asignados a ese grupo.</remarks>
+        [JsonPropertyName("colores")]
+        public Dictionary<string, List<string>> LosColores { get; set; } = new();
+        //public Dictionary<string, List<Color>> LosColores { get; set; } = new();
 
         // El directorio de configuración en documentos.
         // Si no se indica, usar el de inicio de la aplicación.

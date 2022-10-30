@@ -136,10 +136,11 @@ namespace gsNotas
             AsignarColoresTemas();
 
             // Asignar los colores de copia y configuración después de leer los colores guardados. (29/oct/22 22.45)
-            ColoresClaroCopia = notaUC1.ColoresClaro;
-            ColoresOscuroCopia = notaUC1.ColoresOscuro;
-            ColoresClaroConfig = ColoresClaroCopia;
-            ColoresOscuroConfig = ColoresOscuroCopia;
+            // No asignarlos directamente porque son valores por referencia. (30/oct/22 14.00)
+            ColoresClaroCopia = Colores.CopiarColores(notaUC1.ColoresClaro);
+            ColoresOscuroCopia = Colores.CopiarColores(notaUC1.ColoresOscuro);
+            ColoresClaroConfig = Colores.CopiarColores(ColoresClaroCopia);
+            ColoresOscuroConfig = Colores.CopiarColores(ColoresOscuroCopia);
         }
 
         private void AsignarColoresTemas()
@@ -276,7 +277,7 @@ namespace gsNotas
             // Añadir el resto de colores según se indica en cuantosColores.
             for (int i = colores.Count; i < cuantosColores; i++)
             {
-                AñadirNuevoColor(colores);
+                Colores.AñadirNuevoColor(colores);
             }
 
             // Solo guardar los colores si no era el aleatorio. (27/oct/22 15.49)
@@ -704,7 +705,7 @@ namespace gsNotas
         /// <returns>El último color asignado.</returns>
         private Color AsignarColoresGrupos()
         {
-            Color col = GetRandomColor();
+            Color col = Colores.GetRandomColor();
             var rnd = new Random();
 
             // No es necesario hacer la comprobación de si no hay datos de colores. (18/oct/22 17.11)
@@ -722,7 +723,7 @@ namespace gsNotas
                 Color col2;
                 do
                 {
-                    col2 = GetRandomColor(r, g, b);
+                    col2 = Colores.GetRandomColor(r, g, b);
                 } while (col.Equals(col2));
                 col = col2;
 
@@ -738,35 +739,10 @@ namespace gsNotas
             AsignarValores(lbl, false, esNota);
             // Los valores fijos
             lbl.Margin = new Padding(3);
-            SetBackColor(lbl, col);
+            Colores.SetBackColor(lbl, col);
             lbl.Text = nota;
 
             return lbl;
-        }
-
-        /// <summary>
-        /// Crear un color de forma aleatoria.
-        /// </summary>
-        /// <param name="red">Si no se indica o se indica el valor cero, se asignará un valor aleatorio para el rojo.</param>
-        /// <param name="green">Si no se indica o se indica el valor cero, se asignará un valor aleatorio para el verde.</param>
-        /// <param name="blue">Si no se indica o se indica el valor cero, se asignará un valor aleatorio para el azul.</param>
-        private Color GetRandomColor(byte red = 0, byte green = 0, byte blue = 0)
-        {
-            Random random = new Random((int)DateTime.Now.Ticks);
-            byte r = red == 0 ? (byte)random.Next(0, 255) : red;
-            byte g = green == 0 ? (byte)random.Next(0, 255) : green;
-            byte b = blue == 0 ? (byte)random.Next(0, 255) : blue;
-            if (random.Next(0, 2) == 0)
-                return Color.FromArgb(255, r, g, b);
-            else
-                return Color.FromArgb(255, b, r, g);
-        }
-
-        private void SetBackColor(Control ctrl, Color col)
-        {
-            ctrl.BackColor = col;
-            //ctrl.ForeColor = (col.GetBrightness() < 0.5) ? (Color.White) : (Color.Black);
-            ctrl.ForeColor = (col.GetBrightness() < 0.6) ? (Color.White) : (Color.Black);
         }
 
         private void LblNota_Click(object sender, EventArgs e)
@@ -1075,8 +1051,8 @@ namespace gsNotas
                 panelColores.Controls.Add(OpcBtnDeshacer);
                 panelColores.Controls.Add(OpcBtnGuardar);
 
-                ColoresClaroCopia = notaUC1.ColoresClaro;
-                ColoresOscuroCopia = notaUC1.ColoresOscuro;
+                ColoresClaroCopia = Colores.CopiarColores(notaUC1.ColoresClaro);
+                ColoresOscuroCopia = Colores.CopiarColores(notaUC1.ColoresOscuro);
 
                 if (notaUC1.Tema == Temas.Claro)
                 {
@@ -1353,10 +1329,10 @@ No se guardan los grupos y notas en blanco.
             MySettings.OrdenColores = (int)OrdenColores;
 
             // Asignar los colores de los temas (se hayan cambiado o no).
-            notaUC1.ColoresClaro = ColoresClaroConfig;
-            notaUC1.ColoresOscuro = ColoresOscuroConfig;
-            ColoresClaroCopia = ColoresClaroConfig;
-            ColoresOscuroCopia = ColoresOscuroConfig;
+            notaUC1.ColoresClaro = Colores.CopiarColores(ColoresClaroConfig);
+            notaUC1.ColoresOscuro = Colores.CopiarColores(ColoresOscuroConfig);
+            ColoresClaroCopia = Colores.CopiarColores(ColoresClaroConfig);
+            ColoresOscuroCopia = Colores.CopiarColores(ColoresOscuroConfig);
 
             // Guardar los colores de los temas en el fichero de colores.
             string grupoColor = "Tema-Claro";
@@ -1437,8 +1413,8 @@ No se guardan los grupos y notas en blanco.
 
             // Los colores de los temas.
             ColorChkColoresPredeterminados.Checked = notaUC1.ColoresPredeterminados;
-            ColoresClaroConfig = ColoresClaroCopia;
-            ColoresOscuroConfig = ColoresOscuroCopia;
+            ColoresClaroConfig = Colores.CopiarColores(ColoresClaroCopia);
+            ColoresOscuroConfig = Colores.CopiarColores(ColoresOscuroCopia);
 
             ColorCboTemas.SelectedIndex = (int)notaUC1.Tema;
             ColorCboTemas_SelectedIndexChanged(null, null);
@@ -1495,10 +1471,6 @@ No se guardan los grupos y notas en blanco.
             {
                 if (ColorCboTemas.SelectedIndex == 0)
                 {
-                    //if (lblColorFondo.BackColor != notaUC1.ColoresClaro[0])
-                    //    modificado = true;
-                    //else if (lblColorTexto.BackColor != notaUC1.ColoresClaro[1])
-                    //    modificado = true;
                     if (ColoresClaroConfig[0] != ColoresClaroCopia[0])
                         modificado = true;
                     else if (ColoresClaroConfig[1] != ColoresClaroCopia[1])
@@ -1556,7 +1528,7 @@ No se guardan los grupos y notas en blanco.
                 }
                 lbl.Text = i.ToString();
                 lbl.BackColor = col;
-                SetBackColor(lbl, col);
+                Colores.SetBackColor(lbl, col);
                 // Poder cambiar el color. (25/oct/22 16.54)
                 lbl.Click += Lbl_Click;
                 lbl.Tag = OpcCboColorGrupo.SelectedIndex;
@@ -1635,8 +1607,8 @@ No se guardan los grupos y notas en blanco.
                 // Si se usan los colores predeterminados.
                 if (ColorChkColoresPredeterminados.Checked)
                 {
-                    ColoresClaroConfig = NotaUC.ColoresClaroPredeterminado;
-                    ColoresClaroCopia = ColoresClaroConfig;
+                    ColoresClaroConfig = Colores.CopiarColores(NotaUC.ColoresClaroPredeterminado);
+                    ColoresClaroCopia = Colores.CopiarColores(ColoresClaroConfig);
                 }
                 lblColorFondo.BackColor = ColoresClaroConfig[0];
                 lblColorTexto.BackColor = ColoresClaroConfig[1];
@@ -1646,8 +1618,8 @@ No se guardan los grupos y notas en blanco.
                 // Si se usan los colores predeterminados.
                 if (ColorChkColoresPredeterminados.Checked)
                 {
-                    ColoresOscuroConfig = NotaUC.ColoresOscuroPredeterminado;
-                    ColoresOscuroCopia = ColoresOscuroConfig;
+                    ColoresOscuroConfig = Colores.CopiarColores(NotaUC.ColoresOscuroPredeterminado);
+                    ColoresOscuroCopia = Colores.CopiarColores(ColoresOscuroConfig);
                 }
                 lblColorFondo.BackColor = ColoresOscuroConfig[0];
                 lblColorTexto.BackColor = ColoresOscuroConfig[1];
@@ -1675,15 +1647,31 @@ No se guardan los grupos y notas en blanco.
             var heightAnt = lbl.Height;
             lbl.Height = 36;
 
-            var frmColor = new FormSeleccionarColor();
-            frmColor.ElColor = lbl.BackColor;
-            frmColor.OrdenColores = OrdenColores;
-            if (frmColor.ShowDialog() == DialogResult.OK)
+            // Usar el cuadro de diálogo de colores del sistema. (30/oct/22 12.56)
+            var colorDlg = new ColorDialog
             {
-                // Recordar el último valor usado. (27/oct/22 14.44)
-                OrdenColores = frmColor.OrdenColores;
+                // Permitir definir colores.
+                AllowFullOpen = true,
+                // Mostrar la parte de la definición personalizada de colores.
+                FullOpen = true,
+                // Mostrar todos los colores disponibles.
+                AnyColor = true,
+                // No solo los colores sólidos.
+                SolidColorOnly = false,
+                // El formato es en BGR
+                // Añadir los colores personalizados de los temas.
+                // Poner como primer color personalizado el que se modifica.
+                CustomColors = new int[]{
+                    ColorTranslator.ToOle(lbl.BackColor),
+                    ColorTranslator.ToOle(Color.FromArgb(0, 99, 177)),
+                    ColorTranslator.ToOle(Color.FromArgb(30, 30, 30)),
+                    ColorTranslator.ToOle(Color.FromArgb(87, 166, 58))},
 
-                lbl.BackColor = frmColor.ElColor;
+                Color = lbl.BackColor
+            };
+            if (colorDlg.ShowDialog() == DialogResult.OK)
+            {
+                lbl.BackColor = colorDlg.Color;
 
                 if (lbl == lblColorFondo)
                 {
@@ -1709,6 +1697,42 @@ No se guardan los grupos y notas en blanco.
 
                 OpcDatosModificados();
             }
+
+            //var frmColor = new FormSeleccionarColor();
+            //frmColor.ElColor = lbl.BackColor;
+            //frmColor.OrdenColores = OrdenColores;
+            //if (frmColor.ShowDialog() == DialogResult.OK)
+            //{
+            //    // Recordar el último valor usado. (27/oct/22 14.44)
+            //    OrdenColores = frmColor.OrdenColores;
+
+            //    lbl.BackColor = frmColor.ElColor;
+
+            //    if (lbl == lblColorFondo)
+            //    {
+            //        lblColorTexto.ForeColor = lbl.BackColor;
+            //    }
+            //    else if (lbl == lblColorTexto)
+            //    {
+            //        lblColorFondo.ForeColor = lbl.BackColor;
+            //    }
+            //    txtColorTema.BackColor = lblColorFondo.BackColor;
+            //    txtColorTema.ForeColor = lblColorTexto.BackColor;
+
+            //    if (ColorCboTemas.SelectedIndex == 0)
+            //    {
+            //        ColoresClaroConfig[0] = lblColorFondo.BackColor;
+            //        ColoresClaroConfig[1] = lblColorTexto.BackColor;
+            //    }
+            //    else
+            //    {
+            //        ColoresOscuroConfig[0] = lblColorFondo.BackColor;
+            //        ColoresOscuroConfig[1] = lblColorTexto.BackColor;
+            //    }
+
+            //    OpcDatosModificados();
+            //}
+
             // Reponer los valores que tenía antes.
             lbl.BorderStyle = bordeAnt;
             lbl.Height = heightAnt;
@@ -1931,21 +1955,6 @@ No se guardan los grupos y notas en blanco.
 
             notaUC1.AsignarGrupos(grupo: nuevoGrupo);
             tabsConfig_SelectedIndexChanged(null, null);
-        }
-
-        /// <summary>
-        /// Añade un nuevo color aleatorio a la colección.
-        /// </summary>
-        /// <param name="colores">Colección con los colores que hay para no repetir.</param>
-        private void AñadirNuevoColor(List<Color> colores)
-        {
-            Color col2;
-            do
-            {
-                col2 = GetRandomColor();
-            } while (colores.Contains(col2));
-
-            colores.Add(col2);
         }
 
         /// <summary>

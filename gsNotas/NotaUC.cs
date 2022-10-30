@@ -698,7 +698,7 @@ namespace gsNotas
         /// <remarks>Si ColoresPredeterminados es true, no se asignan los nuevos colores.</remarks>
         [Browsable(true)]
         [Description("Colores a usar en el tema Claro. Fondo blanco, letras en color azul (0,99,177).")]
-        [DefaultValue(typeof(Color[]), "White, (0,99,177)")]
+        [DefaultValue(typeof(Color[]), "White, (0, 99, 177)")]
         [Category("Colores")]
         public Color[] ColoresClaro { get; set; } = ColoresClaroPredeterminado;
 
