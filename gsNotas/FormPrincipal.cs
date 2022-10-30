@@ -1652,24 +1652,30 @@ No se guardan los grupos y notas en blanco.
             {
                 // Permitir definir colores.
                 AllowFullOpen = true,
-                // Mostrar la parte de la definición personalizada de colores.
-                FullOpen = true,
+                // De entrada no mostrar la parte de la definición personalizada de colores.
+                FullOpen = false,
                 // Mostrar todos los colores disponibles.
                 AnyColor = true,
                 // No solo los colores sólidos.
                 SolidColorOnly = false,
-                // El formato es en BGR
+                // El formato es en BGR, (no se usa la luminosidad, siempre es FF/255)
+                //  si no son colores especiales (KnownColor) se puede usar Towin32 en lugar de ToOle).
                 // Añadir los colores personalizados de los temas.
+                //  Aparte de los Primary y Accent de Xamarin y MAUI.
                 // Poner como primer color personalizado el que se modifica.
                 CustomColors = new int[]
                 {
-                    ColorTranslator.ToOle(lbl.BackColor),
-                    ColorTranslator.ToOle(Color.White),
-                    ColorTranslator.ToOle(Color.FromArgb(0, 99, 177)),
+                    ColorTranslator.ToWin32(lbl.BackColor),
+                    ColorTranslator.ToWin32(Color.White),
+                    ColorTranslator.ToWin32(Color.FromArgb(0, 99, 177)),
                     ColorTranslator.ToOle(Color.FromArgb(30, 30, 30)),
-                    ColorTranslator.ToOle(Color.FromArgb(87, 166, 58)),
-                    ColorTranslator.ToOle(ColorTranslator.FromHtml("#2196F3")),
+                    ColorTranslator.ToWin32(Color.FromArgb(87, 166, 58)),
+                    // Primary de AppShell de Xamarin.
+                    ColorTranslator.ToWin32(ColorTranslator.FromHtml("#2196F3")),
+                    // Accent de AppShell de Xamarin.
                     ColorTranslator.ToOle(ColorTranslator.FromHtml("#96d1ff")),
+                    // Primary de MAUI
+                    ColorTranslator.ToWin32(ColorTranslator.FromHtml("#512BD4")),
                     //ColorTranslator.ToOle(ColorTranslator.FromHtml("#0077df")),
                     //ColorTranslator.ToOle(ColorTranslator.FromHtml("#003391")),
                     //ColorTranslator.ToOle(ColorTranslator.FromHtml("#4A5C8C")),

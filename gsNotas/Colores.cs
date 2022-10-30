@@ -38,14 +38,20 @@ namespace gsNotas
 
         // Crear una copia de los colores para que sean independientes. (30/oct/22 14.01)
 
+        /// <summary>
+        /// Crea una copia de los colores.
+        /// </summary>
+        /// <param name="losColores">Los colores a copiar.</param>
         public static Color[] CopiarColores(Color[] losColores)
         {
-            List<Color> colorList = new List<Color>();
-            foreach (var c in losColores)
-            {
-                colorList.Add(c);
-            }
-            return colorList.ToArray();
+            return (Color[])losColores.Clone();
+
+            //List<Color> colorList = new List<Color>();
+            //foreach (var c in losColores)
+            //{
+            //    colorList.Add(c);
+            //}
+            //return colorList.ToArray();
         }
 
         /// <summary>
