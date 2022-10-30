@@ -51,11 +51,13 @@ Cosillas que me gustaría añadir.
   - Cargar las notas de una de las copias/backup pero no usando importar (con formato NotaUC), si no, para reemplazar el contenido actual.
   - Cambiar el tamaño de los paneles (arrastrando el panel del editor o un splitter entre ambos paneles).
   - Poder elegir un color personalizado.
-    - Por ahora solo se pueden elegir los colores definidos por el sistema.
-    - Estoy pensando usar el selector de colores del sistema en lugar de la aplicación que ahora utilizo. 🤔
+    - Por ahora solo se pueden elegir los colores definidos por el sistema (o el control WellPanel).
+    - He puesto el selector de colores del sistema para los colores de los temas.
   - Poder usar las notas desde el fichero de texto o base de datos (con las de gsNotasNET para Android y UWP/WinUI).
   
 ## Hechas del TODO
 
+  - En los colores de los temas utilizo el selector de colores del sistema permitiendo personalizar el color.
+    - Muestro los colores personalizados usados en los temas por si se quiere restaurar alguno modificado.
   - Cambiar los colores de los temas claro y oscuro (letra y fondo) en tiempo de ejecución (ahora se puede hacer en tiempo de diseño).
     - Se guardan los colores de los temas en ColoresGrupos.json.  
