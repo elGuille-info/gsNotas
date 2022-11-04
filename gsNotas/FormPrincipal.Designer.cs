@@ -190,6 +190,7 @@
             this.NotasFlowLayoutPanel.Size = new System.Drawing.Size(1091, 354);
             this.NotasFlowLayoutPanel.TabIndex = 2;
             this.NotasFlowLayoutPanel.WrapContents = false;
+            this.NotasFlowLayoutPanel.DoubleClick += new System.EventHandler(this.NotasFlowLayoutPanel_DoubleClick);
             this.NotasFlowLayoutPanel.Resize += new System.EventHandler(this.NotasFlowLayoutPanel_Resize);
             // 
             // LblNota
@@ -222,6 +223,7 @@
             this.GruposFlowLayoutPanel.Name = "GruposFlowLayoutPanel";
             this.GruposFlowLayoutPanel.Size = new System.Drawing.Size(1091, 354);
             this.GruposFlowLayoutPanel.TabIndex = 0;
+            this.GruposFlowLayoutPanel.DoubleClick += new System.EventHandler(this.GruposFlowLayoutPanel_DoubleClick);
             // 
             // LblGrupo
             // 

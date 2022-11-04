@@ -1824,10 +1824,13 @@ No se guardan los grupos y notas en blanco.
             if (OpcChkMostrarHorizontal.Checked)
             {
                 HorizontalSize.Width = NotasFlowLayoutPanel.ClientSize.Width - 12;
+                // Asignarle true para mostrarlas en una sola línea. (04/nov/22 18.23)
                 NotasFlowLayoutPanel.WrapContents = false; // true;
             }
             else
+            {
                 NotasFlowLayoutPanel.WrapContents = false;
+            }
 
             MostrarNotas(notaUC1.Grupo, notaUC1.ComboNotas.SelectedIndex);
         }
@@ -1969,6 +1972,34 @@ No se guardan los grupos y notas en blanco.
 
             notaUC1.AsignarGrupos(grupo: nuevoGrupo);
             tabsConfig_SelectedIndexChanged(null, null);
+        }
+
+        private void GruposFlowLayoutPanel_DoubleClick(object sender, EventArgs e)
+        {
+            //// El valor en diseño es el predeterminado: true
+            ////GruposFlowLayoutPanel.WrapContents = !GruposFlowLayoutPanel.WrapContents;
+
+            //// El valor en diseño es el predeterminado: LeftToRight
+            //if (GruposFlowLayoutPanel.FlowDirection == FlowDirection.LeftToRight)
+            //{
+            //    GruposFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
+            //    GruposFlowLayoutPanel.WrapContents = false;
+            //}
+            //else
+            //{
+            //    GruposFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+            //    GruposFlowLayoutPanel.WrapContents = true;
+            //}
+        }
+
+        private void NotasFlowLayoutPanel_DoubleClick(object sender, EventArgs e)
+        {
+            //// El valor en diseño es false.
+            //// Al asignarle true y si se muestran en horizontal, estarán en una sola línea.
+            //NotasFlowLayoutPanel.WrapContents = !NotasFlowLayoutPanel.WrapContents;
+            
+            //// El valor en diseño es TopDown (el predeterminado es LeftToRight)
+            ////NotasFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
         }
 
         /// <summary>
