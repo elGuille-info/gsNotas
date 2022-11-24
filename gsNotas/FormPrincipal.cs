@@ -19,6 +19,8 @@ v2.0.0.0    19-oct-22   Primera versión para .NET 6.
                         Añado el paquete Google.Apis.Keep.v1 v1.57.0.2637
                         Añado referencia al proyecto Seleccionar Colores. (23.24)
 v2.0.0.1    21-oct-22   Empezar a usar los colores (serializados).
+
+v2.0.1.8    24-nov-22   Al hacer doble-click en el icono de notificación restaurar el formulario.
 */
 
 using System;
@@ -1196,6 +1198,13 @@ No se guardan los grupos y notas en blanco.
             iniciando = false;
             tabsConfig_SelectedIndexChanged(null, null);
         }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            // Al hacer doble-click en el icono de notificación restaurar el formulario. (24/nov/22 16.22)
+            MnuNotifyRestaurar_Click(null, null);
+        }
+
 
         private void MnuNotifyRestaurar_Click(object sender, EventArgs e)
         {
